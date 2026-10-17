@@ -23,10 +23,14 @@
       .replace(/[ァ-ヶ]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60))
       .replace(/[・･\s\-‐–―「」『』（）()、。]/g, "");
 
+  const detailText = (id) => {
+    const d = typeof DETAILS !== "undefined" && DETAILS[id];
+    return d ? [d.life, ...(d.points || []), d.influence].join(" ") : "";
+  };
   const haystack = new Map(
     THEOLOGIANS.map((t) => [
       t.id,
-      normalize([t.name, t.original, t.region, t.country, ...t.fields, t.tradition, t.affiliation || "", t.summary, ...t.works, ...t.themes, ...t.keywords].join(" "))
+      normalize([detailText(t.id), t.name, t.original, t.region, t.country, ...t.fields, t.tradition, t.affiliation || "", t.summary, ...t.works, ...t.themes, ...t.keywords].join(" "))
     ])
   );
 
@@ -125,18 +129,33 @@
   }
 
   // ---------- 描画：年表 ----------
+  // 年表に挿入する出来事の時代区分（年で振り分け）
+  const ERA_END = { ancient: 600, medieval: 1500, reformation: 1650, "early-modern": 1800, modern: 1914, contemporary: Infinity };
+  const eventEra = (year) => Object.keys(ERA_END).find((k) => year < ERA_END[k]);
+  const shownKinds = new Set(Object.keys(EVENT_KINDS));
+
   function renderTimeline() {
+    $("#timeline-kinds").innerHTML = Object.entries(EVENT_KINDS).map(([k, label]) => `
+      <label class="tl-toggle tl-kind-${k}"><input type="checkbox" data-kind="${k}" ${shownKinds.has(k) ? "checked" : ""}>${label}</label>`).join("");
+
     $("#timeline").innerHTML = Object.entries(ERAS).map(([key, era]) => {
       const people = sorted.filter((t) => t.era === key);
-      if (!people.length) return "";
+      const events = HISTORY_EVENTS.filter((ev) => shownKinds.has(ev.kind) && eventEra(ev.year) === key);
+      if (!people.length && !events.length) return "";
+      const rows = [
+        ...people.map((t) => ({ y: t.born, html: `
+              <li><button data-id="${t.id}">
+                <span class="tl-years">${escapeHtml(t.years)}</span><span class="tl-name">${escapeHtml(t.name)}</span><span class="tl-trad">${escapeHtml(t.tradition)}</span>
+              </button></li>` })),
+        ...events.map((ev) => ({ y: ev.year - 0.1, html: `
+              <li class="tl-event tl-kind-${ev.kind}">
+                <span class="tl-years">${escapeHtml(ev.label)}</span><span class="tl-badge">${EVENT_KINDS[ev.kind]}</span><span class="tl-event-text">${escapeHtml(ev.text)}</span>
+              </li>` }))
+      ].sort((a, b) => a.y - b.y);
       return `
         <section class="tl-era" style="--era-color:${eraColor(key)}">
           <h2>${era.label}<small>${era.range}・${people.length}名</small></h2>
-          <ul class="tl-list">
-            ${people.map((t) => `
-              <li><button data-id="${t.id}">
-                <span class="tl-years">${escapeHtml(t.years)}</span><span class="tl-name">${escapeHtml(t.name)}</span><span class="tl-trad">${escapeHtml(t.tradition)}</span>
-              </button></li>`).join("")}
+          <ul class="tl-list">${rows.map((r) => r.html).join("")}
           </ul>
         </section>`;
     }).join("");
@@ -164,6 +183,13 @@
     $("#d-name").textContent = t.name;
     $("#d-original").textContent = t.original;
     $("#d-summary").textContent = t.summary;
+    const more = (typeof DETAILS !== "undefined" && DETAILS[t.id]) || null;
+    $("#d-more").hidden = !more;
+    if (more) {
+      $("#d-life").textContent = more.life || "";
+      $("#d-points").innerHTML = (more.points || []).map((p) => `<li>${escapeHtml(p)}</li>`).join("");
+      $("#d-influence").textContent = more.influence || "";
+    }
     $("#d-works").innerHTML = t.works.map((w) => `<li>${escapeHtml(w)}</li>`).join("");
     $("#d-themes").innerHTML = t.themes.map((th) => `<button data-theme="${escapeHtml(th)}">${escapeHtml(th)}</button>`).join("");
     $("#d-keywords").innerHTML = t.keywords.map((k) => `<span>${escapeHtml(k)}</span>`).join("");
@@ -228,6 +254,12 @@
     if (themeBtn) return selectTheme(themeBtn.dataset.theme);
     const idBtn = e.target.closest("[data-id]");
     if (idBtn) return openDetail(idBtn.dataset.id);
+  });
+  $("#timeline-kinds").addEventListener("change", (e) => {
+    const k = e.target.dataset.kind;
+    if (!k) return;
+    e.target.checked ? shownKinds.add(k) : shownKinds.delete(k);
+    renderTimeline();
   });
   $("#d-close").addEventListener("click", closeDetail);
   dialog.addEventListener("click", (e) => { if (e.target === dialog) closeDetail(); });

@@ -58,6 +58,10 @@
 
     <!-- 年表 -->
     <section id="view-timeline" class="view" hidden>
+      <div class="tl-controls">
+        <span class="filter-label">出来事を表示</span>
+        <div id="timeline-kinds"></div>
+      </div>
       <div id="timeline"></div>
     </section>
   </main>
@@ -69,6 +73,14 @@
       <h2 id="d-name"></h2>
       <p class="d-original" id="d-original"></p>
       <p class="d-summary" id="d-summary"></p>
+      <div id="d-more" hidden>
+        <h3>生涯</h3>
+        <p class="d-text" id="d-life"></p>
+        <h3>思想のポイント</h3>
+        <ul class="d-points" id="d-points"></ul>
+        <h3>影響と評価</h3>
+        <p class="d-text" id="d-influence"></p>
+      </div>
       <div id="d-affil-wrap" hidden>
         <h3>主な所属校</h3>
         <p class="d-affil" id="d-affil"></p>
@@ -91,6 +103,8 @@
   </footer>
 
   <script src="js/data.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/details.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
