@@ -1,39 +1,21 @@
 :root {
-  --bg: #f7f3ea;
-  --surface: #fffdf8;
-  --ink: #2a2520;
-  --muted: #6e655a;
-  --line: #e2d9c8;
-  --accent: #7a2e2e;
-  --accent-soft: #f1e3df;
-  --chip: #efe8da;
-  --shadow: 0 1px 2px rgba(60, 40, 20, .06), 0 4px 14px rgba(60, 40, 20, .06);
+  color-scheme: light;
+  --bg: #f5f8fc;
+  --surface: #ffffff;
+  --ink: #1f2a37;
+  --muted: #5b6b7d;
+  --line: #e2e9f1;
+  --accent: #2563b8;
+  --accent-soft: #e7f0fb;
+  --chip: #f0f4f9;
+  --shadow: 0 1px 2px rgba(30, 60, 110, .05), 0 6px 18px rgba(30, 60, 110, .07);
 
-  --era-ancient: #8a5a2b;
-  --era-medieval: #4f6b3a;
-  --era-reformation: #7a2e2e;
-  --era-early-modern: #6b4f8a;
-  --era-modern: #2f5f80;
-  --era-contemporary: #3f3f3f;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #1b1916;
-    --surface: #24211d;
-    --ink: #ece6dc;
-    --muted: #a99f92;
-    --line: #3a352f;
-    --accent: #e09a8c;
-    --accent-soft: #3a2a27;
-    --chip: #302c27;
-    --shadow: none;
-    --era-ancient: #d6a46c;
-    --era-medieval: #9fc286;
-    --era-reformation: #e09a8c;
-    --era-early-modern: #bfa3e0;
-    --era-modern: #8cc0e6;
-    --era-contemporary: #c8c8c8;
-  }
+  --era-ancient: #e07b24;
+  --era-medieval: #2f9e6a;
+  --era-reformation: #d9455f;
+  --era-early-modern: #8b5cf6;
+  --era-modern: #0d9fb3;
+  --era-contemporary: #3b7ddd;
 }
 
 * { box-sizing: border-box; }
@@ -110,8 +92,7 @@ select {
 }
 .mini-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
 .mini-tags span { font-size: .72rem; background: var(--chip); border-radius: 4px; padding: 1px 6px; color: var(--muted); }
-mark { background: #f5dd8a; color: inherit; border-radius: 2px; }
-@media (prefers-color-scheme: dark) { mark { background: #6b5a1e; } }
+mark { background: #fff0a3; color: inherit; border-radius: 2px; }
 .empty { color: var(--muted); padding: 30px 0; text-align: center; }
 
 /* theme cloud */
@@ -197,10 +178,7 @@ dialog::backdrop { background: rgba(20, 15, 10, .5); }
 .filter-row .filter-label { min-width: 3.5em; }
 
 /* 年表：歴史の出来事 */
-:root { --ev-west: #8a5a2b; --ev-church: #7a2e2e; --ev-japan: #2f5f80; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --ev-west: #d6a46c; --ev-church: #e09a8c; --ev-japan: #8cc0e6; }
-}
+:root { --ev-west: #e07b24; --ev-church: #d9455f; --ev-japan: #2563b8; }
 .tl-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 4px 0 18px; }
 #timeline-kinds { display: flex; flex-wrap: wrap; gap: 12px; }
 .tl-toggle { display: inline-flex; align-items: center; gap: 4px; font-size: .88rem; cursor: pointer; }
@@ -227,9 +205,6 @@ dialog::backdrop { background: rgba(20, 15, 10, .5); }
 
 /* クイズ */
 :root { --ok: #2f7a4a; --ok-soft: #e3f2e8; --ng: #b23b3b; --ng-soft: #f8e3e3; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --ok: #7fd09a; --ok-soft: #1f3327; --ng: #f08a8a; --ng-soft: #3a2424; }
-}
 #quiz { max-width: 720px; margin: 0 auto 48px; }
 .qz-card {
   background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
@@ -300,3 +275,30 @@ dialog::backdrop { background: rgba(20, 15, 10, .5); }
   .qz-setting { flex-direction: column; gap: 4px; }
   .qz-actions .qz-go, .qz-actions .qz-link { flex: 1; }
 }
+
+/* 明るいデザイン */
+.site-header {
+  background: linear-gradient(120deg, #e3efff 0%, #f3f8ff 45%, #fff6e8 100%);
+  border-bottom: 1px solid var(--line);
+}
+.site-title a { color: #1d4f99; }
+.site-sub { color: #4f6680; }
+.tab { border-radius: 8px 8px 0 0; }
+.tab:hover { color: var(--accent); background: var(--accent-soft); }
+.tab.is-active { background: var(--surface); }
+.search-box input { box-shadow: var(--shadow); border-color: #d5e1ee; }
+.chip { background: var(--surface); border-color: #d5e1ee; }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.is-on { color: #fff; }
+.chip.is-on:hover { color: #fff; }
+.card { border-top-width: 5px; }
+.card:hover { box-shadow: 0 2px 4px rgba(30,60,110,.06), 0 12px 28px rgba(30,60,110,.12); }
+.mini-tags span { background: var(--accent-soft); color: #3c5f8d; }
+.tl-list li.tl-event { background: #fbfcfe; border: 1px solid var(--line); }
+.tl-badge { color: #fff; }
+.qz-go { color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 184, .25); }
+.qz-go:hover { filter: brightness(1.08); }
+.qz-body { background: #f3f7fc; border: 1px solid var(--line); }
+.qz-choice.is-correct .qz-key, .qz-choice.is-wrong .qz-key { color: #fff; }
+.site-footer { background: var(--surface); }
+dialog::backdrop { background: rgba(30, 50, 80, .35); }
