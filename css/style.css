@@ -347,3 +347,56 @@ dialog::backdrop { background: rgba(60, 35, 15, .4); }
     repeating-linear-gradient(182deg, rgba(40,20,5,.15) 0 1px, transparent 1px 27px);
   border-top: 0;
 }
+
+/* 現代神学略解 */
+#streams { max-width: 860px; margin: 0 auto 48px; }
+.st-intro h2 { font-family: "Noto Serif JP", serif; font-size: 1.45rem; margin: 4px 0 6px; }
+.st-intro p { color: var(--muted); margin: 0 0 14px; }
+.st-map {
+  background: linear-gradient(180deg, #fffcf6, #fff6ea); border: 1px solid var(--line);
+  border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 26px;
+}
+.st-map-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.st-map-row:last-child { border-bottom: 0; }
+.st-map-era {
+  flex: none; width: 8.5em; font-size: .8rem; font-weight: 700; color: var(--wood-dark);
+  padding-top: 5px; border-right: 3px solid var(--wood-light); margin-right: 2px;
+}
+.st-map-items, .st-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-chip {
+  font: inherit; font-size: .84rem; cursor: pointer; border-radius: 8px; padding: 4px 11px;
+  border: 1px solid #dcc4a2; background: #fffaf2; color: var(--ink);
+}
+.st-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.st-sec {
+  background: linear-gradient(180deg, #fffcf6, #fff8ee); border: 1px solid var(--line);
+  border-left: 5px solid var(--wood); border-radius: 12px; padding: 18px 22px 14px;
+  margin-bottom: 18px; box-shadow: var(--shadow); scroll-margin-top: 14px;
+}
+.st-sec h2 { font-family: "Noto Serif JP", serif; font-size: 1.3rem; margin: 2px 0 6px; line-height: 1.45; }
+.st-sec h3 { font-size: .85rem; color: var(--accent); margin: 16px 0 6px; letter-spacing: .05em; }
+.st-sec p { margin: 0 0 10px; }
+.st-sec ul { margin: 0; padding-left: 1.2em; }
+.st-sec .st-period { font-size: .8rem; color: var(--muted); margin: 0; display: flex; align-items: center; gap: 8px; }
+.st-no {
+  display: inline-grid; place-items: center; width: 1.8em; height: 1.8em; border-radius: 50%;
+  background: var(--wood); color: #fffaf0; font-weight: 700; font-size: .78rem;
+}
+.st-sec .st-lead { font-weight: 500; background: var(--accent-soft); border-radius: 8px; padding: 8px 12px; }
+.st-sec .st-top { text-align: right; margin: 10px 0 0; }
+.st-totop { font: inherit; font-size: .8rem; border: 0; background: none; color: var(--accent); cursor: pointer; }
+.st-flash { animation: st-flash 1.6s ease; }
+@keyframes st-flash { 0% { box-shadow: 0 0 0 4px rgba(185, 133, 82, .55); } 100% { box-shadow: var(--shadow); } }
+@media (max-width: 520px) {
+  .st-map-row { flex-direction: column; gap: 6px; }
+  .st-map-era { width: auto; border-right: 0; border-bottom: 2px solid var(--wood-light); padding-bottom: 2px; }
+  .st-sec { padding: 14px 14px 10px; }
+}
+
+/* 批判と論争 */
+.d-crit {
+  margin-top: 16px; padding: 4px 14px 12px; border-radius: 10px;
+  background: #fbf3ea; border-left: 4px solid var(--era-reformation);
+}
+.d-crit h3 { color: var(--era-reformation); }
+.d-critics-label { font-size: .8rem; color: var(--muted); margin: 10px 0 6px; }

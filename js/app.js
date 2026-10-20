@@ -25,7 +25,8 @@
 
   const detailText = (id) => {
     const d = typeof DETAILS !== "undefined" && DETAILS[id];
-    return d ? [d.life, ...(d.points || []), d.influence].join(" ") : "";
+    const c = typeof CRITIQUES !== "undefined" && CRITIQUES[id];
+    return [d ? [d.life, ...(d.points || []), d.influence].join(" ") : "", c ? c.text : ""].join(" ");
   };
   const haystack = new Map(
     THEOLOGIANS.map((t) => [
@@ -183,6 +184,14 @@
     $("#d-name").textContent = t.name;
     $("#d-original").textContent = t.original;
     $("#d-summary").textContent = t.summary;
+    const crit = (typeof CRITIQUES !== "undefined" && CRITIQUES[t.id]) || null;
+    $("#d-crit-wrap").hidden = !crit;
+    if (crit) {
+      $("#d-crit").textContent = crit.text;
+      const cs = (crit.critics || []).filter((id) => byId[id] && id !== t.id);
+      $("#d-critics-wrap").hidden = !cs.length;
+      $("#d-critics").innerHTML = cs.map((id) => `<button data-id="${id}">${escapeHtml(byId[id].name)}</button>`).join("");
+    }
     const more = (typeof DETAILS !== "undefined" && DETAILS[t.id]) || null;
     $("#d-more").hidden = !more;
     if (more) {
@@ -194,6 +203,9 @@
     $("#d-themes").innerHTML = t.themes.map((th) => `<button data-theme="${escapeHtml(th)}">${escapeHtml(th)}</button>`).join("");
     $("#d-keywords").innerHTML = t.keywords.map((k) => `<span>${escapeHtml(k)}</span>`).join("");
     $("#d-related").innerHTML = related(t).map((o) => `<button data-id="${o.id}">${escapeHtml(o.name)}</button>`).join("");
+    const sts = streamsOf(t.id);
+    $("#d-streams-wrap").hidden = !sts.length;
+    $("#d-streams").innerHTML = sts.map((s) => `<button class="st-chip" data-stream="${s.id}">${escapeHtml(s.title)}</button>`).join("");
     dialog.style.setProperty("--era-color", eraColor(t.era));
     if (!dialog.open) dialog.showModal();
     dialog.scrollTop = 0;
@@ -206,6 +218,53 @@
   dialog.addEventListener("close", () => {
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   });
+
+  // ---------- 現代神学略解（潮流） ----------
+  const hasStreams = typeof STREAMS !== "undefined";
+  const streamById = hasStreams ? Object.fromEntries(STREAMS.map((s) => [s.id, s])) : {};
+  const streamsOf = (id) => (hasStreams ? STREAMS.filter((s) => s.people.includes(id)) : []);
+
+  function renderStreams() {
+    if (!hasStreams || !$("#streams")) return;
+    const map = STREAM_ERAS.map((era) => {
+      const items = STREAMS.filter((s) => s.start >= era.from && s.start <= era.to).sort((x, y) => x.start - y.start);
+      if (!items.length) return "";
+      return `<div class="st-map-row"><span class="st-map-era">${escapeHtml(era.label)}</span>
+        <div class="st-map-items">${items.map((s) => `<button class="st-chip" data-stream="${s.id}">${escapeHtml(s.title.replace(/（.*?）/, ""))}</button>`).join("")}</div></div>`;
+    }).join("");
+    const sections = STREAMS.map((s, i) => `
+      <section class="st-sec" id="stream-${s.id}">
+        <p class="st-period"><span class="st-no">${i + 1}</span>${escapeHtml(s.period)}</p>
+        <h2>${escapeHtml(s.title)}</h2>
+        <p class="st-lead">${escapeHtml(s.lead)}</p>
+        ${s.body.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}
+        <h3>要点</h3>
+        <ul>${s.points.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>
+        <h3>関連する神学者</h3>
+        <div class="related">${s.people.filter((id) => byId[id]).map((id) => `<button data-id="${id}">${escapeHtml(byId[id].name)}</button>`).join("")}</div>
+        ${s.related.length ? `<h3>前後・関連する潮流</h3>
+        <div class="st-links">${s.related.filter((x) => streamById[x]).map((x) => `<button class="st-chip" data-stream="${x}">${escapeHtml(streamById[x].title)}</button>`).join("")}</div>` : ""}
+        <p class="st-top"><button class="st-totop" data-stream-top>▲ 潮流の地図に戻る</button></p>
+      </section>`).join("");
+    $("#streams").innerHTML = `
+      <div class="st-intro">
+        <h2>現代神学略解 ― バルト以降の神学の潮流</h2>
+        <p>20世紀以降の神学は、弁証法神学を起点に、さまざまな流れへと枝分かれしてきました。下の地図から潮流を選ぶと解説に移動し、解説の中の名前を押すと各神学者の詳しい説明が開きます。</p>
+      </div>
+      <div class="st-map" id="stream-map">${map}</div>
+      ${sections}`;
+  }
+
+  function goToStream(id) {
+    const el = document.getElementById(`stream-${id}`);
+    if (!el) return;
+    closeDetail();
+    showView("streams");
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.classList.remove("st-flash");
+    void el.offsetWidth;
+    el.classList.add("st-flash");
+  }
 
   // ---------- 画面切り替え ----------
   function showView(name) {
@@ -250,6 +309,9 @@
   document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
 
   document.addEventListener("click", (e) => {
+    const streamBtn = e.target.closest("[data-stream]");
+    if (streamBtn) return goToStream(streamBtn.dataset.stream);
+    if (e.target.closest("[data-stream-top]")) return $("#stream-map").scrollIntoView({ behavior: "smooth", block: "center" });
     const themeBtn = e.target.closest("[data-theme]");
     if (themeBtn) return selectTheme(themeBtn.dataset.theme);
     const idBtn = e.target.closest("[data-id]");
@@ -269,5 +331,7 @@
   update();
   renderThemes();
   renderTimeline();
-  if (location.hash.length > 1) openDetail(decodeURIComponent(location.hash.slice(1)), false);
+  renderStreams();
+  if (location.hash.startsWith("#stream-")) goToStream(location.hash.slice(8));
+  else if (location.hash.length > 1) openDetail(decodeURIComponent(location.hash.slice(1)), false);
 })();

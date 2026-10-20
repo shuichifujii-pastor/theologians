@@ -37,7 +37,7 @@ const ERAS = {
 const COUNTRY_GROUPS = {
   "アメリカ・カナダ": ["アメリカ", "カナダ"],
   "その他のヨーロッパ": ["スペイン", "ベルギー", "アイルランド", "オーストリア", "デンマーク", "スウェーデン", "ギリシア"],
-  "東欧・ロシア": ["チェコ", "ポーランド", "ルーマニア", "クロアチア", "スロヴェニア", "リトアニア", "ロシア", "バルカン半島"],
+  "東欧・ロシア": ["チェコ", "ポーランド", "ルーマニア", "クロアチア", "スロヴェニア", "ハンガリー", "リトアニア", "ロシア", "バルカン半島"],
   "中東・北アフリカ": ["トルコ（小アジア）", "シリア", "パレスチナ", "エジプト", "北アフリカ", "中央アジア"],
   "アフリカ": ["ケニア", "南アフリカ", "ガーナ", "ガンビア"],
   "中南米": ["メキシコ", "ペルー", "ブラジル", "アルゼンチン"],
@@ -2952,5 +2952,196 @@ const THEOLOGIANS = [
     works: ["『積極的説教と現代精神（Positive Preaching and the Modern Mind）』", "『十字架の決定性（The Cruciality of the Cross）』", "『イエス・キリストの人格と位置（The Person and Place of Jesus Christ）』", "『キリストの働き（The Work of Christ）』", "『祈りの精神（The Soul of Prayer）』"],
     themes: ["贖罪論", "キリスト論", "啓示論", "教会論", "牧会"],
     keywords: ["聖なる愛", "十字架", "会衆派", "説教", "ケノーシス", "バルト以前のバルト", "高倉徳太郎"]
+  },
+  // ---- 新約聖書学（20世紀〜：ダンとその周辺） ----
+  {
+    id: "dodd", name: "C・H・ドッド", original: "C. H. Dodd",
+    born: 1884, years: "1884–1973", era: "contemporary", tradition: "プロテスタント（その他）", region: "ウェールズ出身／イングランド",
+    fields: ["聖書学"], country: "イギリス",
+    affiliation: "マンチェスター大学、ケンブリッジ大学",
+    summary: "英国会衆派の新約学者。シュヴァイツァーの「徹底的終末論」に対し、神の国はイエスの到来においてすでに実現しているとする「実現された終末論」を唱えた。初代教会の宣教（ケリュグマ）の基本形を再構成し、ヨハネ福音書研究でも大きな業績を残した。",
+    works: ["『神の国の譬え（The Parables of the Kingdom）』", "『使徒的宣教とその展開（The Apostolic Preaching and Its Developments）』", "『第四福音書の解釈（The Interpretation of the Fourth Gospel）』"],
+    themes: ["終末論", "聖書解釈", "歴史と信仰"],
+    keywords: ["実現された終末論", "ケリュグマ", "譬え", "ヨハネ福音書", "会衆派", "新英語聖書"]
+  },
+  {
+    id: "jeremias", name: "ヨアヒム・エレミアス", original: "Joachim Jeremias",
+    born: 1900, years: "1900–1979", era: "contemporary", tradition: "ルター派", region: "ドイツ（ゲッティンゲン）",
+    fields: ["聖書学"], country: "ドイツ",
+    affiliation: "ゲッティンゲン大学",
+    summary: "ドイツの新約学者。少年時代をエルサレムで過ごし、パレスチナの言語・風俗・ユダヤ教文献の知識を生かして、イエスの譬えや言葉をその元来の状況に戻して解釈した。イエスが神を親しく「アッバ（父よ）」と呼んだことに、イエスの独自性を見た。",
+    works: ["『イエスの譬え』", "『イエスの聖餐のことば』", "『イエス時代のエルサレム』", "『新約聖書神学 第1部 イエスの宣教』"],
+    themes: ["聖書解釈", "歴史と信仰", "聖礼典論"],
+    keywords: ["アッバ", "譬え", "イエスの真正な言葉", "アラム語", "最後の晩餐"]
+  },
+  {
+    id: "bornkamm", name: "ギュンター・ボルンカム", original: "Günther Bornkamm",
+    born: 1905, years: "1905–1990", era: "contemporary", tradition: "ルター派", region: "ドイツ（ハイデルベルク）",
+    fields: ["聖書学"], country: "ドイツ",
+    affiliation: "ハイデルベルク大学",
+    summary: "ブルトマンの弟子の新約学者。「歴史的イエスの新しい探求」を代表する『ナザレのイエス』を著し、福音書の中に歴史のイエスの姿が宣教と結びついて保たれていることを示した。マタイ福音書の編集史的研究の先駆者でもある。",
+    works: ["『ナザレのイエス』", "『パウロ』", "『マタイ福音書における伝承と解釈』（共著）"],
+    themes: ["歴史と信仰", "聖書解釈", "キリスト論"],
+    keywords: ["新しい探求", "編集史", "ポスト・ブルトマン", "マタイ福音書", "告白教会"]
+  },
+  {
+    id: "conzelmann", name: "ハンス・コンツェルマン", original: "Hans Conzelmann",
+    born: 1915, years: "1915–1989", era: "contemporary", tradition: "ルター派", region: "ドイツ（ゲッティンゲン）",
+    fields: ["聖書学"], country: "ドイツ",
+    affiliation: "ゲッティンゲン大学",
+    summary: "ブルトマンの弟子の新約学者。ルカ福音書と使徒言行録を、ルカが独自の神学的意図で伝承を編集した作品として分析し、「イスラエルの時・イエスの時（時の中心）・教会の時」という三段階の救済史を描いたとして、編集史研究を確立した。",
+    works: ["『時の中心――ルカ神学の研究』", "『新約聖書神学概論』", "『原始キリスト教史』"],
+    themes: ["聖書解釈", "終末論", "歴史と信仰"],
+    keywords: ["編集史", "ルカ神学", "救済史", "時の中心", "ポスト・ブルトマン"]
+  },
+  {
+    id: "hengel", name: "マルティン・ヘンゲル", original: "Martin Hengel",
+    born: 1926, years: "1926–2009", era: "contemporary", tradition: "ルター派", region: "ドイツ（テュービンゲン）",
+    fields: ["聖書学", "歴史神学"], country: "ドイツ",
+    affiliation: "テュービンゲン大学",
+    summary: "ドイツの新約学者・古代ユダヤ教史家。紀元前3世紀以降のパレスチナのユダヤ教がすでに深くヘレニズム化していたことを論証し、「ユダヤ教対ヘレニズム」という単純な図式を覆した。初期キリスト教のキリスト論は非常に早い時期に成立したと主張した。",
+    works: ["『ユダヤ教とヘレニズム』", "『神の子』", "『十字架刑』", "『ゼーロータイ（熱心党）』"],
+    themes: ["歴史と信仰", "キリスト論", "聖書解釈"],
+    keywords: ["ヘレニズム", "第二神殿期ユダヤ教", "高いキリスト論", "熱心党", "テュービンゲン"]
+  },
+  {
+    id: "theissen", name: "ゲルト・タイセン", original: "Gerd Theißen",
+    born: 1943, years: "1943–", era: "contemporary", tradition: "ルター派", region: "ドイツ（ハイデルベルク）",
+    fields: ["聖書学"], country: "ドイツ",
+    affiliation: "ハイデルベルク大学",
+    summary: "ドイツの新約学者。社会学の方法を新約聖書研究に導入し、イエスの運動を、家や財産を捨てて巡り歩く「放浪のカリスマ」と、それを支えた定住の支持者の共同体として描いた。初期キリスト教の心理学や宗教理論、歴史的イエスの教科書でも知られる。",
+    works: ["『イエス運動の社会学』", "『原始キリスト教の社会学』", "『史的イエス』（メルツと共著）", "『ガリラヤの人の影』（小説）"],
+    themes: ["歴史と信仰", "社会思想", "聖書解釈"],
+    keywords: ["社会学的新約研究", "放浪のカリスマ", "イエス運動", "社会史", "ハイデルベルク"]
+  },
+  {
+    id: "stendahl", name: "クリスター・ステンダール", original: "Krister Stendahl",
+    born: 1921, years: "1921–2008", era: "contemporary", tradition: "ルター派", region: "スウェーデン／アメリカ（ハーバード）",
+    fields: ["聖書学"], country: "スウェーデン",
+    affiliation: "ハーバード神学校（学部長）",
+    summary: "スウェーデン出身の新約学者・ルター派主教。パウロの義認論は個人の罪責感の解決ではなく、異邦人がユダヤ人と共に神の民に加えられる問題を扱ったものだと論じた1963年の論文で、「パウロ研究の新しい視点」の先駆となった。ユダヤ教との対話にも尽力した。",
+    works: ["「使徒パウロと西洋の内省的良心」（論文）", "『ユダヤ人と異邦人の間のパウロ（Paul Among Jews and Gentiles）』"],
+    themes: ["義認論", "聖書解釈", "諸宗教の神学", "エキュメニズム"],
+    keywords: ["パウロ研究の新しい視点", "内省的良心", "ユダヤ教との対話", "聖なる妬み", "ストックホルム主教"]
+  },
+  {
+    id: "moule", name: "C・F・D・ムール", original: "C. F. D. Moule",
+    born: 1908, years: "1908–2007", era: "contemporary", tradition: "聖公会", region: "中国生まれ／イングランド（ケンブリッジ）",
+    fields: ["聖書学"], country: "イギリス",
+    affiliation: "ケンブリッジ大学",
+    summary: "英国聖公会の新約学者。キリスト論は、ヘレニズムの影響で単純な教師イエスが神格化されていった「進化」ではなく、初めからイエスの中にあったものが次第に明らかになった「発展」であると論じた。ジェイムズ・D・G・ダンの博士論文の指導教授である。",
+    works: ["『キリスト論の起源（The Origin of Christology）』", "『新約ギリシア語慣用句集（An Idiom Book of New Testament Greek）』", "『新約聖書の誕生（The Birth of the New Testament）』"],
+    themes: ["キリスト論", "聖書解釈"],
+    keywords: ["キリスト論の発展", "ケンブリッジ", "新約ギリシア語"]
+  },
+  {
+    id: "barrett", name: "C・K・バレット", original: "C. K. Barrett",
+    born: 1917, years: "1917–2011", era: "contemporary", tradition: "メソジスト", region: "イングランド（ダラム）",
+    fields: ["聖書学"], country: "イギリス",
+    affiliation: "ダラム大学",
+    summary: "英国メソジストの新約学者・説教者。ダラム大学で長く教え、ヨハネ福音書、ローマ書、コリント書、使徒言行録などの精緻な注解書で20世紀英国の新約学を代表した。パウロと、パウロに対立した人々の関係を論じた研究でも知られる。",
+    works: ["『ヨハネによる福音書』（注解）", "『ローマ人への手紙』（注解）", "『使徒言行録』（ICC注解）", "『新約聖書の背景』（資料集）"],
+    themes: ["聖書解釈", "義認論"],
+    keywords: ["注解書", "ダラム", "メソジスト", "パウロの反対者"]
+  },
+  {
+    id: "ff-bruce", name: "F・F・ブルース", original: "F. F. Bruce",
+    born: 1910, years: "1910–1990", era: "contemporary", tradition: "プロテスタント（その他）", region: "スコットランド出身／イングランド（マンチェスター）",
+    fields: ["聖書学"], country: "イギリス",
+    affiliation: "シェフィールド大学、マンチェスター大学",
+    summary: "スコットランド出身の新約学者。プリマス・ブレザレンの信徒として、福音的な信仰と厳密な歴史批評的研究を両立させ、英語圏の福音派の聖書学を学問的に確立した。『新約聖書の資料は信頼できるか』は長く読み継がれている。",
+    works: ["『新約聖書の資料は信頼できるか（The New Testament Documents: Are They Reliable?）』", "『パウロ――心の自由の使徒（Paul: Apostle of the Heart Set Free）』", "『使徒言行録』（注解）"],
+    themes: ["聖書解釈", "歴史と信仰", "弁証学"],
+    keywords: ["福音派", "プリマス・ブレザレン", "信徒", "使徒言行録", "マンチェスター"]
+  },
+  {
+    id: "raymond-brown", name: "レイモンド・E・ブラウン", original: "Raymond E. Brown",
+    born: 1928, years: "1928–1998", era: "contemporary", tradition: "カトリック", region: "アメリカ（ニューヨーク）",
+    fields: ["聖書学"], country: "アメリカ",
+    affiliation: "ユニオン神学校（ニューヨーク）",
+    summary: "米国カトリックの新約学者で、聖スルピス会の司祭。ヨハネ福音書とヨハネの手紙の大部の注解、イエスの誕生物語と受難物語の詳細な研究で知られる。第二バチカン公会議後のカトリック聖書学の歴史批評的研究を代表した。",
+    works: ["『ヨハネによる福音書』（アンカー注解）", "『メシアの誕生（The Birth of the Messiah）』", "『メシアの死（The Death of the Messiah）』", "『愛する弟子の共同体』"],
+    themes: ["聖書解釈", "キリスト論", "教会論"],
+    keywords: ["ヨハネ共同体", "誕生物語", "受難物語", "聖スルピス会", "カトリック聖書学"]
+  },
+  {
+    id: "vermes", name: "ゲザ・ヴェルメシュ", original: "Géza Vermes",
+    born: 1924, years: "1924–2013", era: "contemporary", tradition: "ユダヤ教", region: "ハンガリー出身／イギリス（オックスフォード）",
+    fields: ["聖書学"], country: "ハンガリー",
+    affiliation: "オックスフォード大学",
+    summary: "ハンガリー出身のユダヤ人の聖書学者。死海文書の研究・翻訳の第一人者であり、『ユダヤ人イエス』で、イエスを当時のガリラヤのユダヤ教の中に生きたカリスマ的な聖者・癒し手として描き、ユダヤ教の文脈からのイエス研究を切り開いた。",
+    works: ["『ユダヤ人イエス（Jesus the Jew）』", "『死海文書』（英訳全集）", "『イエスの宗教（The Religion of Jesus the Jew）』"],
+    themes: ["歴史と信仰", "聖書解釈", "諸宗教の神学"],
+    keywords: ["死海文書", "ユダヤ人イエス", "第三の探求", "ガリラヤのカリスマ", "クムラン"]
+  },
+  {
+    id: "crossan", name: "ジョン・ドミニク・クロッサン", original: "John Dominic Crossan",
+    born: 1934, years: "1934–", era: "contemporary", tradition: "カトリック", region: "アイルランド出身／アメリカ",
+    fields: ["聖書学"], country: "アイルランド",
+    affiliation: "デポール大学",
+    summary: "アイルランド出身の新約学者。イエス・セミナーの共同創設者として、社会人類学と考古学を用い、イエスを、ローマ帝国支配下の農民社会で、癒しと分け隔てのない食卓によって神の国を実践した、ユダヤ人の農民の知恵の教師・社会批判者として描いた。",
+    works: ["『史的イエス（The Historical Jesus）』", "『イエス――あるユダヤ人貧農の革命的生涯』", "『The Last Week』（ボーグと共著）"],
+    themes: ["歴史と信仰", "社会思想", "聖書解釈"],
+    keywords: ["イエス・セミナー", "歴史的イエス", "分け隔てのない食卓", "地中海の農民", "ローマ帝国"]
+  },
+  {
+    id: "borg", name: "マーカス・ボーグ", original: "Marcus Borg",
+    born: 1942, years: "1942–2015", era: "contemporary", tradition: "聖公会", region: "アメリカ",
+    fields: ["聖書学"], country: "アメリカ",
+    affiliation: "オレゴン州立大学",
+    summary: "米国の新約学者。イエス・セミナーの主要メンバーとして、イエスを、神の霊に満たされた「霊の人」であり、知恵の教師、社会の預言者、運動の創始者として描いた。信仰と歴史研究を結びつけた一般向けの著作で、米国の主流派教会に大きな影響を与えた。",
+    works: ["『Jesus in Contemporary Scholarship』", "『Meeting Jesus Again for the First Time』", "『イエスの意味（The Meaning of Jesus）』（N・T・ライトとの共著）"],
+    themes: ["歴史と信仰", "霊性", "聖書解釈"],
+    keywords: ["イエス・セミナー", "霊の人", "歴史的イエス", "前復活のイエスと復活後のイエス"]
+  },
+  {
+    id: "meier", name: "ジョン・P・マイヤー", original: "John P. Meier",
+    born: 1942, years: "1942–2022", era: "contemporary", tradition: "カトリック", region: "アメリカ（ニューヨーク）",
+    fields: ["聖書学"], country: "アメリカ",
+    affiliation: "アメリカ・カトリック大学、ノートルダム大学",
+    summary: "米国カトリックの司祭・新約学者。歴史的イエスについての全5巻の大著『周縁のユダヤ人（A Marginal Jew）』で、カトリック・プロテスタント・ユダヤ教・不可知論者の学者が一つの部屋で合意できる範囲を目指して、イエスの生涯の史実性を厳密な基準で検討した。",
+    works: ["『周縁のユダヤ人（A Marginal Jew: Rethinking the Historical Jesus）』（全5巻）"],
+    themes: ["歴史と信仰", "聖書解釈"],
+    keywords: ["歴史的イエス", "真正性の基準", "第三の探求", "ノートルダム"]
+  },
+  {
+    id: "hurtado", name: "ラリー・ハータド", original: "Larry W. Hurtado",
+    born: 1943, years: "1943–2019", era: "contemporary", tradition: "プロテスタント（その他）", region: "アメリカ出身／スコットランド（エディンバラ）",
+    fields: ["聖書学"], country: "アメリカ",
+    affiliation: "エディンバラ大学",
+    summary: "米国出身の新約学者。最初期のキリスト者は、ユダヤ教の唯一神信仰を保ちながら、祈り・讃美・洗礼・聖餐などの礼拝の中でイエスを神と並んで崇めていたことを論証し、「初期の高いキリスト論」の研究を代表した。この問題でダンと論争した。",
+    works: ["『主イエス・キリスト――最初期キリスト教におけるイエスへの献身（Lord Jesus Christ）』", "『一つの神、一人の主（One God, One Lord）』", "『最初期のキリスト教写本（The Earliest Christian Artifacts）』"],
+    themes: ["キリスト論", "歴史と信仰", "三位一体論"],
+    keywords: ["初期の高いキリスト論", "イエスへの献身", "二位一体的礼拝", "唯一神信仰", "エディンバラ"]
+  },
+  {
+    id: "martyn", name: "J・ルイス・マーティン", original: "J. Louis Martyn",
+    born: 1925, years: "1925–2015", era: "contemporary", tradition: "プロテスタント（その他）", region: "アメリカ（ニューヨーク）",
+    fields: ["聖書学"], country: "アメリカ",
+    affiliation: "ユニオン神学校（ニューヨーク）",
+    summary: "米国の新約学者。ヨハネ福音書を、会堂から追放されたヨハネ共同体の経験を映す「二つのレベルの劇」として読み解いた。またガラテヤ書の注解で、パウロの福音を、神が悪の支配する世界に「侵入」して解放する黙示的な出来事として描き、「黙示的パウロ」の解釈を代表した。",
+    works: ["『第四福音書における歴史と神学（History and Theology in the Fourth Gospel）』", "『ガラテヤ人への手紙』（アンカー注解）", "『パウロ書簡の神学的諸問題（Theological Issues in the Letters of Paul）』"],
+    themes: ["聖書解釈", "終末論", "義認論"],
+    keywords: ["黙示的パウロ", "ヨハネ共同体", "会堂追放", "神の侵入", "ガラテヤ書"]
+  },
+  {
+    id: "hays", name: "リチャード・B・ヘイズ", original: "Richard B. Hays",
+    born: 1948, years: "1948–2025", era: "contemporary", tradition: "メソジスト", region: "アメリカ",
+    fields: ["聖書学"], country: "アメリカ",
+    affiliation: "イェール大学、デューク大学神学部（学部長）",
+    summary: "米国メソジストの新約学者。パウロ書簡に響く旧約聖書の「こだま（エコー）」を読み取る研究や、パウロの「イエス・キリストの信仰」を、キリスト自身の真実（信実）と読む解釈で、パウロ研究に大きな影響を与えた。新約聖書倫理学の大著でも知られる。",
+    works: ["『イエス・キリストの信仰（The Faith of Jesus Christ）』", "『パウロ書簡における聖書のこだま（Echoes of Scripture in the Letters of Paul）』", "『新約聖書の倫理的ヴィジョン（The Moral Vision of the New Testament）』"],
+    themes: ["聖書解釈", "倫理", "義認論"],
+    keywords: ["キリストの信実", "ピスティス・クリストゥ", "旧約のこだま", "新約聖書倫理", "物語的パウロ解釈"]
+  },
+  {
+    id: "dunn", name: "ジェイムズ・D・G・ダン", original: "James D. G. Dunn",
+    born: 1939, years: "1939–2020", era: "contemporary", tradition: "メソジスト", region: "イギリス（スコットランドで育つ／ダラム）",
+    fields: ["聖書学"], country: "イギリス",
+    affiliation: "ノッティンガム大学、ダラム大学",
+    summary: "英国の新約学者。1982年の講演で「パウロ研究の新しい視点」という名を与え、パウロが批判した「律法の行い」とは、割礼・食物規定・安息日など、ユダヤ人と異邦人を分ける「境界標識」を指すと論じた。聖霊論、キリスト論の起源、歴史的イエス、初期キリスト教の多様性など、新約学の幅広い分野で大きな業績を残した。",
+    works: ["『使徒パウロの神学』", "『新約聖書における一致と多様性（Unity and Diversity in the New Testament）』", "『形成途上のキリスト論（Christology in the Making）』", "『記憶されたイエス（Jesus Remembered）』", "『聖霊のバプテスマ（Baptism in the Holy Spirit）』"],
+    themes: ["義認論", "聖書解釈", "キリスト論", "聖霊論", "歴史と信仰"],
+    keywords: ["パウロ研究の新しい視点", "NPP", "律法の行い", "境界標識", "記憶されたイエス", "ダラム", "ライトフット講座"]
   }
 ];
