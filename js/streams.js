@@ -308,7 +308,7 @@ const STREAMS = [
       "教理を、共同体の言語と実践を導く規則として理解する",
       "教会の第一の社会的使命は「教会であること」とする（ハワーワス）"
     ],
-    people: ["frei", "lindbeck", "hauerwas", "yoder", "macintyre", "wittgenstein", "barth", "h-r-niebuhr", "webster"],
+    people: ["frei", "lindbeck", "hauerwas", "willimon", "yoder", "macintyre", "wittgenstein", "barth", "h-r-niebuhr", "webster"],
     related: ["neo-orthodoxy", "peace", "radical-orthodoxy"]
   },
   {
@@ -452,7 +452,7 @@ const STREAMS = [
       "宗教改革以来の義認論をめぐって、福音派・改革派の内部でも大きな論争が起きた",
       "イエスのユダヤ性の強調と、初期キリスト教の礼拝の研究が進んだ"
     ],
-    people: ["sanders", "dunn", "nt-wright", "stendahl", "martyn", "hays", "vermes", "meier", "crossan", "borg", "hurtado", "bauckham", "hengel", "theissen", "aono"],
+    people: ["sanders", "dunn", "nt-wright", "stendahl", "martyn", "hays", "vermes", "meier", "crossan", "borg", "hurtado", "bauckham", "hengel", "theissen", "aono", "kawashima-sadao"],
     related: ["post-bultmann", "evangelical"]
   },
   {
