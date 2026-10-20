@@ -26,7 +26,10 @@
   const detailText = (id) => {
     const d = typeof DETAILS !== "undefined" && DETAILS[id];
     const c = typeof CRITIQUES !== "undefined" && CRITIQUES[id];
-    return [d ? [d.life, ...(d.points || []), d.influence].join(" ") : "", c ? c.text : ""].join(" ");
+    const es = typeof ESSAYS !== "undefined" && ESSAYS[id] ? [ESSAYS[id].lead, ...ESSAYS[id].sections.flatMap((s) => [s.h, ...s.body]), ...(ESSAYS[id].terms || []).flat()].join(" ") : "";
+    const ins = typeof INSTITUTIONS !== "undefined" ? INSTITUTIONS.filter((x) => x.people.some((p) => p[0] === id)).map((x) => x.name).join(" ") : "";
+    const dbs = typeof DEBATES !== "undefined" ? DEBATES.filter((x) => x.people.some((p) => p[0] === id)).map((x) => x.title).join(" ") : "";
+    return [d ? [d.life, ...(d.points || []), d.influence].join(" ") : "", c ? c.text : "", ins, es, dbs].join(" ");
   };
   const haystack = new Map(
     THEOLOGIANS.map((t) => [
@@ -80,7 +83,7 @@
     $("#results").innerHTML = list.length
       ? list.map((t) => `
         <button class="card" data-id="${t.id}" style="--era-color:${eraColor(t.era)}">
-          <span class="meta">${ERAS[t.era].label}・${escapeHtml(t.tradition)}・${escapeHtml(t.years)}</span>
+          <span class="meta">${ERAS[t.era].label}・${escapeHtml(t.tradition)}・${escapeHtml(t.years)}${hasEssay(t.id) ? '<span class="essay-badge">詳解</span>' : ""}</span>
           <span class="name">${highlight(t.name, raw)}</span>
           <span class="orig">${highlight(t.original, raw)}</span>
           <p class="sum">${highlight(t.summary, raw)}</p>
@@ -133,15 +136,41 @@
   // 年表に挿入する出来事の時代区分（年で振り分け）
   const ERA_END = { ancient: 600, medieval: 1500, reformation: 1650, "early-modern": 1800, modern: 1914, contemporary: Infinity };
   const eventEra = (year) => Object.keys(ERA_END).find((k) => year < ERA_END[k]);
-  const shownKinds = new Set(Object.keys(EVENT_KINDS));
+  // 論争・会議と神学教育機関の創立も、年表に出来事として加える
+  const TL_KINDS = { ...EVENT_KINDS, debate: "論争・会議", inst: "教育機関の創立" };
+  const shownKinds = new Set(Object.keys(TL_KINDS));
+  function foundedYear(s) {
+    const y = String(s).match(/(\d{3,4})年/);
+    if (y) return { year: Number(y[1]), label: String(s).match(/^\d{3,4}年代/) ? `${y[1]}年代` : y[1] };
+    const c = String(s).match(/^(\d{1,2})世紀$/);
+    if (c && Number(c[1]) < 20) return { year: (Number(c[1]) - 1) * 100 + 50, label: `${c[1]}世紀` };
+    return null; // 「20世紀」などおおまかすぎるものは年表に載せない
+  }
+  function timelineEvents() {
+    // 教会史の出来事と同じ会議は、教会史の行をリンクにして重複させない
+    const hasDb = typeof DEBATES !== "undefined";
+    const evs = HISTORY_EVENTS.map((ev) => (hasDb && ev.debate && DEBATES.some((d) => d.id === ev.debate)
+      ? { ...ev, attr: "data-debate", id: ev.debate, alsoKind: "debate" } : { ...ev }));
+    const merged = new Set(evs.filter((ev) => ev.alsoKind).map((ev) => ev.id));
+    if (hasDb) {
+      DEBATES.filter((d) => !merged.has(d.id)).forEach((d) => evs.push({ year: d.year, label: d.date, kind: "debate", text: d.title, attr: "data-debate", id: d.id }));
+    }
+    if (typeof INSTITUTIONS !== "undefined") {
+      INSTITUTIONS.forEach((x) => {
+        const f = foundedYear(x.founded);
+        if (f) evs.push({ year: f.year, label: f.label, kind: "inst", text: `${x.name} 創立（${x.place}）`, attr: "data-inst", id: x.id });
+      });
+    }
+    return evs;
+  }
 
   function renderTimeline() {
-    $("#timeline-kinds").innerHTML = Object.entries(EVENT_KINDS).map(([k, label]) => `
+    $("#timeline-kinds").innerHTML = Object.entries(TL_KINDS).map(([k, label]) => `
       <label class="tl-toggle tl-kind-${k}"><input type="checkbox" data-kind="${k}" ${shownKinds.has(k) ? "checked" : ""}>${label}</label>`).join("");
 
     $("#timeline").innerHTML = Object.entries(ERAS).map(([key, era]) => {
       const people = sorted.filter((t) => t.era === key);
-      const events = HISTORY_EVENTS.filter((ev) => shownKinds.has(ev.kind) && eventEra(ev.year) === key);
+      const events = timelineEvents().filter((ev) => (shownKinds.has(ev.kind) || (ev.alsoKind && shownKinds.has(ev.alsoKind))) && eventEra(ev.year) === key);
       if (!people.length && !events.length) return "";
       const rows = [
         ...people.map((t) => ({ y: t.born, html: `
@@ -150,7 +179,9 @@
               </button></li>` })),
         ...events.map((ev) => ({ y: ev.year - 0.1, html: `
               <li class="tl-event tl-kind-${ev.kind}">
-                <span class="tl-years">${escapeHtml(ev.label)}</span><span class="tl-badge">${EVENT_KINDS[ev.kind]}</span><span class="tl-event-text">${escapeHtml(ev.text)}</span>
+                <span class="tl-years">${escapeHtml(ev.label)}</span><span class="tl-badge">${TL_KINDS[ev.kind]}</span>${ev.alsoKind ? `<span class="tl-badge tl-kind-${ev.alsoKind}">${TL_KINDS[ev.alsoKind]}</span>` : ""}${ev.attr
+                  ? `<button class="tl-event-text tl-event-link" ${ev.attr}="${ev.id}">${escapeHtml(ev.text)}</button>`
+                  : `<span class="tl-event-text">${escapeHtml(ev.text)}</span>`}
               </li>` }))
       ].sort((a, b) => a.y - b.y);
       return `
@@ -184,6 +215,8 @@
     $("#d-name").textContent = t.name;
     $("#d-original").textContent = t.original;
     $("#d-summary").textContent = t.summary;
+    $("#d-essay-wrap").hidden = !hasEssay(t.id);
+    $("#d-essay-btn").dataset.essay = t.id;
     const crit = (typeof CRITIQUES !== "undefined" && CRITIQUES[t.id]) || null;
     $("#d-crit-wrap").hidden = !crit;
     if (crit) {
@@ -203,6 +236,12 @@
     $("#d-themes").innerHTML = t.themes.map((th) => `<button data-theme="${escapeHtml(th)}">${escapeHtml(th)}</button>`).join("");
     $("#d-keywords").innerHTML = t.keywords.map((k) => `<span>${escapeHtml(k)}</span>`).join("");
     $("#d-related").innerHTML = related(t).map((o) => `<button data-id="${o.id}">${escapeHtml(o.name)}</button>`).join("");
+    const ins = instOf(t.id);
+    $("#d-inst-wrap").hidden = !ins.length;
+    $("#d-inst").innerHTML = ins.map((o) => `<button class="st-chip" data-inst="${o.inst.id}">${escapeHtml(o.inst.name)}<small>（${escapeHtml(o.role)}）</small></button>`).join("");
+    const dbs = debatesOf(t.id);
+    $("#d-debates-wrap").hidden = !dbs.length;
+    $("#d-debates").innerHTML = dbs.map((o) => `<button class="st-chip" data-debate="${o.debate.id}">${escapeHtml(o.debate.title)}<small>（${escapeHtml(o.role)}）</small></button>`).join("");
     const sts = streamsOf(t.id);
     $("#d-streams-wrap").hidden = !sts.length;
     $("#d-streams").innerHTML = sts.map((s) => `<button class="st-chip" data-stream="${s.id}">${escapeHtml(s.title)}</button>`).join("");
@@ -218,6 +257,59 @@
   dialog.addEventListener("close", () => {
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   });
+
+  // ---------- 詳解ページ ----------
+  const hasEssay = (id) => typeof ESSAYS !== "undefined" && !!ESSAYS[id];
+  let essayReturnView = "search";
+
+  function openEssay(id) {
+    const e = hasEssay(id) && ESSAYS[id];
+    const t = byId[id];
+    if (!e || !t) return;
+    const active = document.querySelector(".tab.is-active");
+    if (active) essayReturnView = active.dataset.view;
+    closeDetail();
+    const people = (e.related || []).filter((x) => byId[x]);
+    $("#essay").innerHTML = `
+      <nav class="es-nav">
+        <button class="es-back" data-essay-back>← 戻る</button>
+        <button class="es-back" data-id="${t.id}">人物の概要を開く</button>
+      </nav>
+      <header class="es-head" style="--era-color:${eraColor(t.era)}">
+        <p class="es-meta">${ERAS[t.era].label}・${escapeHtml(t.tradition)}・${escapeHtml(t.years)}</p>
+        <h1>${escapeHtml(t.name)}の神学・思想</h1>
+        <p class="es-orig">${escapeHtml(t.original)}</p>
+        <p class="es-lead">${escapeHtml(e.lead)}</p>
+      </header>
+      <ol class="es-toc">${e.sections.map((s, i) => `<li><a href="#es-${i}" data-es-jump="${i}">${escapeHtml(s.h)}</a></li>`).join("")}
+        ${e.terms && e.terms.length ? `<li><a href="#es-terms" data-es-jump="terms">キーワード解説</a></li>` : ""}
+        ${e.reading && e.reading.length ? `<li><a href="#es-reading" data-es-jump="reading">読書案内</a></li>` : ""}</ol>
+      ${e.sections.map((s, i) => `
+        <section class="es-sec" id="es-${i}">
+          <h2>${escapeHtml(s.h)}</h2>
+          ${s.body.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}
+        </section>`).join("")}
+      ${e.terms && e.terms.length ? `
+        <section class="es-sec" id="es-terms">
+          <h2>キーワード解説</h2>
+          <dl class="es-terms">${e.terms.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("")}</dl>
+        </section>` : ""}
+      ${e.reading && e.reading.length ? `
+        <section class="es-sec" id="es-reading">
+          <h2>読書案内</h2>
+          <ul>${e.reading.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
+        </section>` : ""}
+      ${people.length ? `
+        <section class="es-sec">
+          <h2>あわせて読みたい人物</h2>
+          <div class="related">${people.map((x) => `<button data-id="${x}">${escapeHtml(byId[x].name)}</button>`).join("")}</div>
+        </section>` : ""}
+      <p class="es-note">この解説は概説です。研究や説教準備では、原典と専門の研究書で確認してください。</p>
+      <nav class="es-nav es-nav-bottom"><button class="es-back" data-essay-back>← 戻る</button></nav>`;
+    showView("essay");
+    window.scrollTo({ top: 0 });
+    history.replaceState(null, "", `#essay-${id}`);
+  }
 
   // ---------- 現代神学略解（潮流） ----------
   const hasStreams = typeof STREAMS !== "undefined";
@@ -266,12 +358,130 @@
     el.classList.add("st-flash");
   }
 
+  // ---------- 論争・会議 ----------
+  const hasDebates = typeof DEBATES !== "undefined";
+  const debatesSorted = hasDebates ? [...DEBATES].sort((x, y) => x.year - y.year) : [];
+  const debateById = Object.fromEntries(debatesSorted.map((x) => [x.id, x]));
+  const debatesOf = (id) => debatesSorted.flatMap((x) => x.people.filter((p) => p[0] === id).map((p) => ({ debate: x, role: p[1] })));
+  const debateState = { era: "", kind: "", q: "" };
+
+  function renderDebates() {
+    if (!hasDebates || !$("#debates")) return;
+    const eraCounts = {}, kindCounts = {};
+    debatesSorted.forEach((x) => {
+      eraCounts[x.era] = (eraCounts[x.era] || 0) + 1;
+      kindCounts[x.kind] = (kindCounts[x.kind] || 0) + 1;
+    });
+    $("#debate-eras").innerHTML =
+      `<button class="chip ${debateState.era ? "" : "is-on"}" data-debate-era="">すべて<span class="chip-n">${debatesSorted.length}</span></button>` +
+      DEBATE_ERAS.filter((e) => eraCounts[e]).map((e) =>
+        `<button class="chip ${debateState.era === e ? "is-on" : ""}" data-debate-era="${escapeHtml(e)}">${escapeHtml(e)}<span class="chip-n">${eraCounts[e]}</span></button>`).join("");
+    $("#debate-kinds").innerHTML =
+      `<button class="chip ${debateState.kind ? "" : "is-on"}" data-debate-kind="">すべて</button>` +
+      ["会議", "論争"].filter((k) => kindCounts[k]).map((k) =>
+        `<button class="chip ${debateState.kind === k ? "is-on" : ""}" data-debate-kind="${k}">${k}<span class="chip-n">${kindCounts[k]}</span></button>`).join("");
+    const terms = debateState.q.split(/\s+/).map(normalize).filter(Boolean);
+    const list = debatesSorted.filter((x) => {
+      if (debateState.era && x.era !== debateState.era) return false;
+      if (debateState.kind && x.kind !== debateState.kind) return false;
+      if (!terms.length) return true;
+      const hay = normalize([x.title, x.date, x.summary, ...x.points, x.outcome,
+        ...x.people.map((p) => (byId[p[0]] ? byId[p[0]].name + byId[p[0]].original : "") + p[1])].join(" "));
+      return terms.every((term) => hay.includes(term));
+    });
+    $("#debate-count").textContent = `${list.length} 項目`;
+    $("#debates").innerHTML = list.length ? list.map((x) => {
+      const ppl = x.people.filter((p) => byId[p[0]]);
+      return `
+      <section class="inst-card db-card" id="debate-${x.id}">
+        <p class="inst-meta"><span class="db-kind db-kind-${x.kind === "会議" ? "council" : "debate"}">${escapeHtml(x.kind)}</span>${escapeHtml(x.era)}・${escapeHtml(x.date)}</p>
+        <h2>${escapeHtml(x.title)}</h2>
+        <p>${escapeHtml(x.summary)}</p>
+        ${x.points.length ? `<h3>争点・経過</h3><ul>${x.points.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>` : ""}
+        ${x.outcome ? `<h3>結果とその後</h3><p>${escapeHtml(x.outcome)}</p>` : ""}
+        ${ppl.length ? `<h3>関わった神学者（${ppl.length}名）</h3>` : ""}
+        <div class="inst-people">${ppl.map((p) =>
+          `<button data-id="${p[0]}"><span>${escapeHtml(byId[p[0]].name)}</span><small>${escapeHtml(p[1])}</small></button>`).join("")}</div>
+      </section>`;
+    }).join("") : `<p class="empty">該当する論争・会議が見つかりませんでした。</p>`;
+  }
+
+  function goToDebate(id) {
+    if (!debateById[id]) return;
+    closeDetail();
+    debateState.era = ""; debateState.kind = ""; debateState.q = "";
+    if ($("#debate-q")) $("#debate-q").value = "";
+    renderDebates();
+    showView("debates");
+    const el = document.getElementById(`debate-${id}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.classList.remove("st-flash");
+    void el.offsetWidth;
+    el.classList.add("st-flash");
+  }
+
+  // ---------- 神学教育機関 ----------
+  const hasInst = typeof INSTITUTIONS !== "undefined";
+  const instById = hasInst ? Object.fromEntries(INSTITUTIONS.map((x) => [x.id, x])) : {};
+  const instOf = (id) => (hasInst ? INSTITUTIONS.flatMap((x) => x.people.filter((p) => p[0] === id).map((p) => ({ inst: x, role: p[1] }))) : []);
+  const instState = { region: "", q: "" };
+
+  function renderInstitutions() {
+    if (!hasInst || !$("#institutions")) return;
+    const counts = {};
+    INSTITUTIONS.forEach((x) => { counts[x.region] = (counts[x.region] || 0) + 1; });
+    $("#inst-regions").innerHTML =
+      `<button class="chip ${instState.region ? "" : "is-on"}" data-inst-region="">すべて<span class="chip-n">${INSTITUTIONS.length}</span></button>` +
+      INST_REGIONS.filter((rg) => counts[rg]).map((rg) =>
+        `<button class="chip ${instState.region === rg ? "is-on" : ""}" data-inst-region="${escapeHtml(rg)}">${escapeHtml(rg)}<span class="chip-n">${counts[rg]}</span></button>`).join("");
+    const terms = instState.q.split(/\s+/).map(normalize).filter(Boolean);
+    const list = INSTITUTIONS.filter((x) => {
+      if (instState.region && x.region !== instState.region) return false;
+      if (!terms.length) return true;
+      const hay = normalize([x.name, x.original, x.place, x.tradition, x.summary, ...x.points,
+        ...x.people.map((p) => (byId[p[0]] ? byId[p[0]].name + byId[p[0]].original : "") + p[1])].join(" "));
+      return terms.every((term) => hay.includes(term));
+    });
+    $("#inst-count").textContent = `${list.length} 機関`;
+    $("#institutions").innerHTML = list.length ? list.map((x) => `
+      <section class="inst-card" id="inst-${x.id}">
+        <p class="inst-meta">${escapeHtml(x.region)}・${escapeHtml(x.place)}・創立 ${escapeHtml(x.founded)}</p>
+        <h2>${escapeHtml(x.name)}</h2>
+        <p class="inst-orig">${escapeHtml(x.original)}</p>
+        <p class="inst-trad">${escapeHtml(x.tradition)}</p>
+        <p>${escapeHtml(x.summary)}</p>
+        ${x.points.length ? `<ul>${x.points.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>` : ""}
+        ${x.people.some((p) => byId[p[0]]) ? `<h3>関わった神学者（${x.people.filter((p) => byId[p[0]]).length}名）</h3>` : ""}
+        <div class="inst-people">${x.people.filter((p) => byId[p[0]]).map((p) =>
+          `<button data-id="${p[0]}"><span>${escapeHtml(byId[p[0]].name)}</span><small>${escapeHtml(p[1])}</small></button>`).join("")}</div>
+      </section>`).join("") : `<p class="empty">該当する教育機関が見つかりませんでした。</p>`;
+  }
+
+  function goToInst(id) {
+    if (!instById[id]) return;
+    closeDetail();
+    instState.region = ""; instState.q = "";
+    if ($("#inst-q")) $("#inst-q").value = "";
+    renderInstitutions();
+    showView("institutions");
+    const el = document.getElementById(`inst-${id}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.classList.remove("st-flash");
+    void el.offsetWidth;
+    el.classList.add("st-flash");
+  }
+
   // ---------- 画面切り替え ----------
   function showView(name) {
     document.querySelectorAll(".tab").forEach((b) => {
       const on = b.dataset.view === name;
       b.classList.toggle("is-active", on);
       b.setAttribute("aria-selected", on);
+      if (on && b.parentElement.scrollWidth > b.parentElement.clientWidth) {
+        b.parentElement.scrollLeft = b.offsetLeft - (b.parentElement.clientWidth - b.offsetWidth) / 2;
+      }
     });
     document.querySelectorAll(".view").forEach((v) => { v.hidden = v.id !== `view-${name}`; });
   }
@@ -309,6 +519,30 @@
   document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
 
   document.addEventListener("click", (e) => {
+    const essayBtn = e.target.closest("[data-essay]");
+    if (essayBtn) return openEssay(essayBtn.dataset.essay);
+    if (e.target.closest("[data-essay-back]")) {
+      showView(essayReturnView);
+      if (location.hash.startsWith("#essay-")) history.replaceState(null, "", location.pathname + location.search);
+      return;
+    }
+    const jump = e.target.closest("[data-es-jump]");
+    if (jump) {
+      e.preventDefault();
+      const el = document.getElementById(`es-${jump.dataset.esJump}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    const debateBtn = e.target.closest("[data-debate]");
+    if (debateBtn) return goToDebate(debateBtn.dataset.debate);
+    const dEra = e.target.closest("[data-debate-era]");
+    if (dEra) { debateState.era = dEra.dataset.debateEra; return renderDebates(); }
+    const dKind = e.target.closest("[data-debate-kind]");
+    if (dKind) { debateState.kind = dKind.dataset.debateKind; return renderDebates(); }
+    const instBtn = e.target.closest("[data-inst]");
+    if (instBtn) return goToInst(instBtn.dataset.inst);
+    const regionBtn = e.target.closest("[data-inst-region]");
+    if (regionBtn) { instState.region = regionBtn.dataset.instRegion; return renderInstitutions(); }
     const streamBtn = e.target.closest("[data-stream]");
     if (streamBtn) return goToStream(streamBtn.dataset.stream);
     if (e.target.closest("[data-stream-top]")) return $("#stream-map").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -332,6 +566,13 @@
   renderThemes();
   renderTimeline();
   renderStreams();
-  if (location.hash.startsWith("#stream-")) goToStream(location.hash.slice(8));
+  renderInstitutions();
+  renderDebates();
+  if ($("#debate-q")) $("#debate-q").addEventListener("input", (e) => { debateState.q = e.target.value; renderDebates(); });
+  if ($("#inst-q")) $("#inst-q").addEventListener("input", (e) => { instState.q = e.target.value; renderInstitutions(); });
+  if (location.hash.startsWith("#essay-")) openEssay(decodeURIComponent(location.hash.slice(7)));
+  else if (location.hash.startsWith("#debate-")) goToDebate(location.hash.slice(8));
+  else if (location.hash.startsWith("#inst-")) goToInst(location.hash.slice(6));
+  else if (location.hash.startsWith("#stream-")) goToStream(location.hash.slice(8));
   else if (location.hash.length > 1) openDetail(decodeURIComponent(location.hash.slice(1)), false);
 })();

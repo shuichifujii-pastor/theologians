@@ -400,3 +400,118 @@ dialog::backdrop { background: rgba(60, 35, 15, .4); }
 }
 .d-crit h3 { color: var(--era-reformation); }
 .d-critics-label { font-size: .8rem; color: var(--muted); margin: 10px 0 6px; }
+
+/* 神学教育機関 */
+#view-institutions { max-width: 900px; margin: 0 auto 48px; }
+.inst-intro h2 { font-family: "Noto Serif JP", serif; font-size: 1.45rem; margin: 4px 0 6px; }
+.inst-intro p { color: var(--muted); margin: 0 0 12px; }
+.inst-card {
+  background: linear-gradient(180deg, #fffcf6, #fff8ee); border: 1px solid var(--line);
+  border-top: 4px solid var(--wood); border-radius: 12px; padding: 16px 20px 14px;
+  margin-bottom: 16px; box-shadow: var(--shadow); scroll-margin-top: 14px;
+}
+.inst-card h2 { font-family: "Noto Serif JP", serif; font-size: 1.25rem; margin: 2px 0 0; line-height: 1.45; }
+.inst-card h3 { font-size: .85rem; color: var(--accent); margin: 14px 0 6px; letter-spacing: .05em; }
+.inst-card p { margin: 0 0 8px; }
+.inst-card ul { margin: 0 0 6px; padding-left: 1.2em; font-size: .93rem; }
+.inst-meta { font-size: .8rem; color: var(--muted); }
+.inst-orig { font-size: .82rem; color: var(--muted); margin-top: -2px !important; }
+.inst-trad { display: inline-block; font-size: .78rem; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 1px 10px; }
+.inst-people { display: flex; flex-wrap: wrap; gap: 6px; }
+.inst-people button {
+  font: inherit; cursor: pointer; text-align: left; display: inline-flex; flex-direction: column;
+  border: 1px solid #dcc4a2; background: #fffaf2; color: var(--ink); border-radius: 8px; padding: 4px 10px; line-height: 1.35;
+}
+.inst-people button span { font-size: .88rem; }
+.inst-people button small { font-size: .72rem; color: var(--muted); }
+.inst-people button:hover { border-color: var(--accent); background: var(--accent-soft); }
+#d-inst .st-chip small { font-size: .74rem; color: var(--muted); }
+
+/* 詳解ページ */
+.d-essay { margin: 4px 0 6px; }
+.essay-link {
+  font: inherit; font-weight: 700; font-size: .92rem; cursor: pointer; border-radius: 10px; padding: 8px 16px;
+  border: 1px solid var(--wood-dark); color: #fffaf0; background-image: linear-gradient(180deg, #a06a38, #85552a);
+  box-shadow: 0 3px 10px rgba(122, 79, 42, .25);
+}
+.essay-link:hover { filter: brightness(1.07); }
+.essay-badge {
+  display: inline-block; margin-left: 6px; font-size: .68rem; font-weight: 700; color: #fffaf0;
+  background: var(--wood); border-radius: 4px; padding: 0 6px; vertical-align: 1px;
+}
+#view-essay { max-width: 780px; margin: 0 auto 56px; }
+#essay {
+  background: linear-gradient(180deg, #fffdf8, #fff8ee); border: 1px solid var(--line); border-radius: 14px;
+  padding: 22px 30px 26px; box-shadow: var(--shadow);
+}
+.es-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.es-nav-bottom { margin: 18px 0 0; }
+.es-back {
+  font: inherit; font-size: .85rem; cursor: pointer; border: 1px solid var(--line); background: var(--chip);
+  color: var(--ink); border-radius: 8px; padding: 5px 12px;
+}
+.es-back:hover { border-color: var(--accent); color: var(--accent); }
+.es-head { border-left: 6px solid var(--era-color); padding-left: 14px; margin-bottom: 18px; }
+.es-meta { font-size: .82rem; color: var(--muted); margin: 0; }
+.es-head h1 { font-family: "Noto Serif JP", serif; font-size: 1.75rem; margin: 2px 0 0; line-height: 1.4; }
+.es-orig { color: var(--muted); margin: 0 0 10px; }
+.es-lead { font-family: "Noto Serif JP", serif; font-size: 1.05rem; line-height: 1.9; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; margin: 0; }
+.es-toc {
+  background: #fbf3e6; border: 1px dashed #dcc4a2; border-radius: 10px; padding: 10px 14px 10px 2.2em; margin: 0 0 20px; font-size: .92rem;
+}
+.es-toc a { color: var(--accent); text-decoration: none; }
+.es-toc a:hover { text-decoration: underline; }
+.es-sec { scroll-margin-top: 16px; }
+.es-sec h2 {
+  font-family: "Noto Serif JP", serif; font-size: 1.22rem; margin: 22px 0 8px;
+  padding-bottom: 4px; border-bottom: 2px solid var(--wood-light);
+}
+.es-sec p { line-height: 1.95; margin: 0 0 12px; text-indent: 1em; }
+.es-terms { margin: 0; }
+.es-terms dt { font-weight: 700; color: var(--wood-dark); margin-top: 10px; }
+.es-terms dd { margin: 2px 0 0 1em; line-height: 1.8; }
+.es-sec ul { padding-left: 1.2em; line-height: 1.8; }
+.es-note { font-size: .82rem; color: var(--muted); margin-top: 20px; }
+@media (max-width: 520px) {
+  #essay { padding: 16px 16px 20px; }
+  .es-head h1 { font-size: 1.4rem; }
+}
+
+/* 論争・会議 */
+.db-kind {
+  display: inline-block; margin-right: 8px; font-size: .72rem; font-weight: 700; color: #fffaf0;
+  border-radius: 4px; padding: 0 7px; vertical-align: 1px;
+}
+.db-kind-council { background: #6b7f3a; }
+.db-kind-debate { background: #a0522d; }
+#d-debates .st-chip small { font-size: .74rem; color: var(--muted); }
+
+/* クイズ（問題の種類のグループ・補足・種類別成績） */
+.qz-groups { display: grid; gap: 8px; flex: 1; }
+.qz-group { display: grid; gap: 3px; }
+.qz-group-label { font-size: .74rem; color: var(--muted); }
+.qz-type-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.qz-mini {
+  font: inherit; font-size: .76rem; cursor: pointer; border: 1px dashed #c9a77e; background: transparent;
+  color: var(--wood-dark); border-radius: 999px; padding: 2px 10px;
+}
+.qz-mini:hover { background: var(--accent-soft); }
+.qz-start .chip:disabled { opacity: .45; cursor: default; }
+.qz-extra {
+  font-size: .88rem; margin: 6px 0; padding: 6px 10px; border-left: 3px solid var(--wood);
+  background: rgba(255, 250, 240, .7); border-radius: 0 6px 6px 0;
+}
+.qz-typestats { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.qz-typestats span { font-size: .8rem; background: var(--chip); border-radius: 999px; padding: 2px 10px; }
+.qz-typestats .is-full { background: var(--ok-soft); color: var(--ok); font-weight: 700; }
+.qz-typestats .is-zero { background: var(--ng-soft); color: var(--ng); }
+
+/* 年表：論争・会議と教育機関の創立 */
+:root { --ev-debate: #6b7f3a; --ev-inst: #7a4f2a; }
+.tl-kind-debate { --ev: var(--ev-debate); }
+.tl-kind-inst { --ev: var(--ev-inst); }
+.tl-event-link {
+  font: inherit; text-align: left; background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--ink); text-decoration: underline; text-decoration-color: #d4b48c; text-underline-offset: 3px;
+}
+.tl-event-link:hover { color: var(--accent); text-decoration-color: var(--accent); }

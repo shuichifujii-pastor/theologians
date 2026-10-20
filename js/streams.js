@@ -398,7 +398,7 @@ const STREAMS = [
       "伝道と社会的責任の両立（ローザンヌ運動）",
       "学術的な聖書学・哲学・組織神学の発展"
     ],
-    people: ["henry", "ff-bruce", "stott", "mcgrath", "plantinga", "keller", "bauckham", "nt-wright", "yong", "lewis"],
+    people: ["machen", "van-til", "henry", "schaeffer", "ff-bruce", "stott", "john-murray", "clowney", "mcgrath", "plantinga", "keller", "bauckham", "nt-wright", "yong", "lewis"],
     related: ["mission", "nt-studies", "science"]
   },
   {

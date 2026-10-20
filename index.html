@@ -23,7 +23,9 @@
       <button class="tab is-active" role="tab" data-view="search" aria-selected="true">名前で探す</button>
       <button class="tab" role="tab" data-view="themes" aria-selected="false">テーマで探す</button>
       <button class="tab" role="tab" data-view="timeline" aria-selected="false">年表で見る</button>
+      <button class="tab" role="tab" data-view="debates" aria-selected="false">論争・会議</button>
       <button class="tab" role="tab" data-view="streams" aria-selected="false">現代神学略解</button>
+      <button class="tab" role="tab" data-view="institutions" aria-selected="false">神学教育機関</button>
       <button class="tab" role="tab" data-view="quiz" aria-selected="false">クイズ</button>
     </nav>
 
@@ -72,6 +74,45 @@
       <div id="streams"></div>
     </section>
 
+    <!-- 神学教育機関 -->
+    <section id="view-institutions" class="view" hidden>
+      <div class="inst-intro">
+        <h2>近代以降の神学教育機関</h2>
+        <p>神学を育てた大学・神学校と、そこで教え学んだ神学者のつながりを整理しました。神学者の名前を押すと詳細が開き、神学者の詳細画面からは関わった教育機関に移動できます。</p>
+      </div>
+      <div class="search-box"><input id="inst-q" type="search" placeholder="機関名・地名・神学者名（例：バーゼル、ユニオン、バルト）" autocomplete="off"></div>
+      <div class="filter-row" style="margin-top:10px">
+        <span class="filter-label">地域</span>
+        <div class="chips chips-small" id="inst-regions"></div>
+      </div>
+      <p class="count" id="inst-count"></p>
+      <div id="institutions"></div>
+    </section>
+
+    <!-- 論争・会議 -->
+    <section id="view-debates" class="view" hidden>
+      <div class="inst-intro">
+        <h2>キリスト教の歴史上の論争・会議</h2>
+        <p>教会の歩みを形づくった公会議や神学論争を、時代順に整理しました。神学者の名前を押すと詳細が開き、神学者の詳細画面からは関わった論争・会議に移動できます。</p>
+      </div>
+      <div class="search-box"><input id="debate-q" type="search" placeholder="論争・会議名、争点、神学者名（例：カルケドン、予定、ルター）" autocomplete="off"></div>
+      <div class="filter-row" style="margin-top:10px">
+        <span class="filter-label">時代</span>
+        <div class="chips chips-small" id="debate-eras"></div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">種類</span>
+        <div class="chips chips-small" id="debate-kinds"></div>
+      </div>
+      <p class="count" id="debate-count"></p>
+      <div id="debates"></div>
+    </section>
+
+    <!-- 詳解ページ -->
+    <section id="view-essay" class="view" hidden>
+      <article id="essay"></article>
+    </section>
+
     <!-- クイズ -->
     <section id="view-quiz" class="view" hidden>
       <div id="quiz"></div>
@@ -85,6 +126,7 @@
       <h2 id="d-name"></h2>
       <p class="d-original" id="d-original"></p>
       <p class="d-summary" id="d-summary"></p>
+      <p class="d-essay" id="d-essay-wrap" hidden><button class="essay-link" id="d-essay-btn" data-essay="">この人の神学・思想をくわしく読む（詳解ページ）→</button></p>
       <div id="d-more" hidden>
         <h3>生涯</h3>
         <p class="d-text" id="d-life"></p>
@@ -111,6 +153,14 @@
       <div class="tags" id="d-themes"></div>
       <h3>キーワード</h3>
       <div class="kw" id="d-keywords"></div>
+      <div id="d-inst-wrap" hidden>
+        <h3>関わった神学教育機関</h3>
+        <div class="st-links" id="d-inst"></div>
+      </div>
+      <div id="d-debates-wrap" hidden>
+        <h3>関わった論争・会議</h3>
+        <div class="st-links" id="d-debates"></div>
+      </div>
       <div id="d-streams-wrap" hidden>
         <h3>関わる神学の潮流（現代神学略解）</h3>
         <div class="st-links" id="d-streams"></div>
@@ -131,6 +181,9 @@
   <script src="js/details.js"></script>
   <script src="js/critiques.js"></script>
   <script src="js/streams.js"></script>
+  <script src="js/institutions.js"></script>
+  <script src="js/debates.js"></script>
+  <script src="js/essays.js"></script>
   <script src="js/app.js"></script>
   <script src="js/quiz.js"></script>
 </body>
