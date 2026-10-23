@@ -33,6 +33,7 @@ js/institutions.js 神学教育機関と神学者の関わり
 js/debates.js   論争・会議（関わった神学者とのリンク）
 js/essays.js    詳解ページ（主要な神学者の神学・思想のくわしい解説）
 js/app.js       検索・表示の仕組み
+manifest.webmanifest / icons/   ホーム画面に追加したときのアイコンと名前
 js/quiz.js      クイズ
 ```
 
