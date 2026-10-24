@@ -18,9 +18,9 @@
   const RATES = [0.8, 1, 1.2, 1.5];
 
   // 読み上げる単位（見出し・段落・一覧の項目・カードなど）
-  const BLOCKS = "h1, h2, h3, h4, p, li, dt, dd, .card, .qz-choice, .inst-people button, .theme-btn";
+  const BLOCKS = "h1, h2, h3, h4, p, li, dt, dd, .card, .qz-choice, .inst-people button, .theme-btn, .nt-name, .nt-text";
   // 読み上げない部分（タブ・絞り込みボタン・入力欄・読み上げバー自身など）
-  const SKIP = ".tabs, .d-essay, .chips, .filter-row, .search-box, .tradition-row, #timeline-kinds, .tts-bar, .close, .es-nav, .qz-actions, .qz-head, .qz-setting, .qz-type-tools, [hidden]";
+  const SKIP = ".tabs, .d-essay, .d-note, .nt-bar, .nt-tools, .nt-foot, .chips, .filter-row, .search-box, .tradition-row, #timeline-kinds, .tts-bar, .close, .es-nav, .qz-actions, .qz-head, .qz-setting, .qz-type-tools, [hidden]";
 
   const loadRate = () => {
     try { const r = Number(localStorage.getItem(RATE_KEY)); return RATES.includes(r) ? r : 1; } catch (e) { return 1; }
@@ -104,7 +104,7 @@
       if (idx > 0) list = list.slice(idx);
     }
     return list
-      .map((el) => ({ el, chunks: splitText(clean(el.innerText || el.textContent || "")) }))
+      .map((el) => ({ el, chunks: splitText(clean(el.tagName === "TEXTAREA" ? el.value : (el.innerText || el.textContent || ""))) }))
       .filter((x) => x.chunks.length);
   }
 

@@ -50,6 +50,9 @@
 
   const eraColor = (era) => `var(--era-${era})`;
 
+  const hasNotes = typeof NOTES !== "undefined";
+  if (hasNotes) document.addEventListener("notes-changed", () => renderResults());
+
   // ---------- 絞り込み ----------
   function filtered() {
     const terms = state.q.split(/\s+/).map(normalize).filter(Boolean);
@@ -59,7 +62,7 @@
       if (state.field && !t.fields.includes(state.field)) return false;
       if (state.tradition && t.tradition !== state.tradition) return false;
       if (state.theme && !t.themes.includes(state.theme)) return false;
-      const hay = haystack.get(t.id);
+      const hay = haystack.get(t.id) + (hasNotes && NOTES.has(t.id) ? normalize(NOTES.get(t.id)) : "");
       return terms.every((term) => hay.includes(term));
     });
   }
@@ -83,7 +86,7 @@
     $("#results").innerHTML = list.length
       ? list.map((t) => `
         <button class="card" data-id="${t.id}" style="--era-color:${eraColor(t.era)}">
-          <span class="meta">${ERAS[t.era].label}・${escapeHtml(t.tradition)}・${escapeHtml(t.years)}${hasEssay(t.id) ? '<span class="essay-badge">詳解</span>' : ""}</span>
+          <span class="meta">${ERAS[t.era].label}・${escapeHtml(t.tradition)}・${escapeHtml(t.years)}${hasEssay(t.id) ? '<span class="essay-badge">詳解</span>' : ""}${hasNotes && NOTES.has(t.id) ? '<span class="note-badge">メモ</span>' : ""}</span>
           <span class="name">${highlight(t.name, raw)}</span>
           <span class="orig">${highlight(t.original, raw)}</span>
           <p class="sum">${highlight(t.summary, raw)}</p>
@@ -249,6 +252,7 @@
     if (!dialog.open) dialog.showModal();
     dialog.scrollTop = 0;
     if (push) history.replaceState(null, "", `#${t.id}`);
+    document.dispatchEvent(new CustomEvent("detail-open", { detail: { id: t.id } }));
   }
 
   function closeDetail() {
