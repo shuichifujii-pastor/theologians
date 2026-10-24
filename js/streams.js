@@ -200,7 +200,7 @@ const STREAMS = [
       "神の受苦性（苦しむ神）をめぐる議論を活発にした",
       "政治神学・解放の神学・エコロジーの神学に影響を与えた"
     ],
-    people: ["moltmann", "pannenberg", "metz", "cullmann", "jungel", "kitamori"],
+    people: ["moltmann", "pannenberg", "metz", "cullmann", "jungel", "kitamori", "bloch"],
     related: ["post-bultmann", "political", "liberation", "trinity"]
   },
   {
@@ -218,7 +218,7 @@ const STREAMS = [
       "教会の社会的・政治的責任を神学の中心的な課題とする",
       "近年は哲学（アガンベン、ハーバーマス）とも対話している"
     ],
-    people: ["metz", "moltmann", "solle", "hromadka", "ellul", "agamben", "arendt", "barth"],
+    people: ["metz", "moltmann", "solle", "hromadka", "ellul", "agamben", "arendt", "barth", "benjamin", "bloch", "taubes", "adorno", "horkheimer"],
     related: ["church-struggle", "hope", "liberation", "public"]
   },
   {
@@ -272,7 +272,7 @@ const STREAMS = [
       "聖書の沈黙や周縁から、女性たちの歴史を読み直す",
       "エコロジー、ポストコロニアル、クィアの視点と結びついて多様化している"
     ],
-    people: ["ruether", "daly", "schussler-fiorenza", "mcfague", "e-johnson", "coakley", "solle", "chung-hyun-kyung", "kwok", "oduyoye", "tamez", "yamaguchi-satoko", "kinukawa", "horie-yuri", "kudo-marie", "okano-haruko"],
+    people: ["ruether", "daly", "schussler-fiorenza", "mcfague", "e-johnson", "coakley", "solle", "chung-hyun-kyung", "kwok", "oduyoye", "tamez", "yamaguchi-satoko", "kinukawa", "horie-yuri", "kudo-marie", "okano-haruko", "beauvoir", "butler"],
     related: ["liberation", "black", "contextual"]
   },
   {
@@ -344,7 +344,7 @@ const STREAMS = [
       "教父と中世の伝統（参与の存在論）の現代的な再生",
       "現象学・脱構築など現代哲学との積極的な対話"
     ],
-    people: ["milbank", "marion", "derrida", "hart", "vattimo", "macintyre", "scotus"],
+    people: ["milbank", "marion", "derrida", "hart", "vattimo", "macintyre", "scotus", "lyotard", "foucault", "henry-michel"],
     related: ["postliberal", "secular", "public"]
   },
   {
@@ -380,7 +380,7 @@ const STREAMS = [
       "対話は、互いの違いを尊重しつつ学び合う実践でもある",
       "日本では仏教・禅との対話が大きな主題となってきた"
     ],
-    people: ["hick", "rahner", "kung", "pieris", "takizawa", "kadowaki", "sato-migaku", "yong", "newbigin", "merton", "stendahl"],
+    people: ["hick", "rahner", "kung", "pieris", "takizawa", "kadowaki", "sato-migaku", "yong", "newbigin", "merton", "stendahl", "nishitani"],
     related: ["catholic", "contextual", "mission"]
   },
   {
@@ -488,7 +488,7 @@ const STREAMS = [
       "市民社会・民主主義・人権との関係",
       "宗教と暴力、和解の問題"
     ],
-    people: ["volf", "habermas", "c-taylor", "r-niebuhr", "kuyper", "inagaki", "nanbara", "kohara"],
+    people: ["volf", "habermas", "c-taylor", "r-niebuhr", "kuyper", "inagaki", "nanbara", "kohara", "rawls"],
     related: ["political", "neo-orthodoxy", "secular"]
   },
   {
