@@ -515,3 +515,30 @@ dialog::backdrop { background: rgba(60, 35, 15, .4); }
   color: var(--ink); text-decoration: underline; text-decoration-color: #d4b48c; text-underline-offset: 3px;
 }
 .tl-event-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+/* 読み上げ */
+body.has-tts { padding-bottom: 76px; }
+.tts-bar {
+  position: fixed; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 50;
+  display: flex; align-items: center; gap: 6px; padding: 6px;
+  background: linear-gradient(180deg, #8b5a2b, #6b4220); border: 1px solid #5a3718; border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(60, 35, 15, .35);
+}
+.tts-bar button {
+  font: inherit; cursor: pointer; border: 0; border-radius: 999px; color: #fffaf0; background: rgba(255, 250, 240, .12);
+  min-height: 40px; padding: 0 14px;
+}
+.tts-bar button:hover { background: rgba(255, 250, 240, .24); }
+.tts-bar button:focus-visible { outline: 2px solid #f7dc96; outline-offset: 2px; }
+.tts-main { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 0 18px !important; background: rgba(255, 250, 240, .2) !important; }
+.tts-icon { font-size: .85rem; width: 1.1em; text-align: center; }
+.tts-stop { font-size: .8rem; width: 40px; padding: 0 !important; }
+.tts-rate { font-size: .85rem; font-variant-numeric: tabular-nums; }
+.tts-bar.is-playing .tts-main { background: #c9963f !important; color: #2c1806; }
+.tts-reading {
+  background-color: #fff1c9 !important; box-shadow: 0 0 0 3px #f0cf7c; border-radius: 6px;
+  transition: background-color .2s ease;
+}
+@media print { .tts-bar { display: none; } }
+.tts-bar, .tts-bar button { white-space: nowrap; }
+body.has-tts dialog .detail { padding-bottom: 84px; }
