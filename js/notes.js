@@ -6,14 +6,19 @@
  *   ・「メモ」タブで、書いたメモを一覧・検索・編集・削除できます
  *   ・テキストで書き出したり、バックアップ（JSON）を保存・読み込みして
  *     別の端末に移したりできます
- * メモはサーバーには送られません。ブラウザのデータを消すと消えるので、
- * 大切なメモはときどきバックアップを保存してください。
+ *   ・Googleアカウントでログインすると、同じアカウントのどの端末からでも
+ *     同じメモを読み書きできます（js/sync.js・js/firebase-config.js）
+ * ログインしないときは、メモはこの端末の中だけに保存されます。
+ *
+ * 削除したメモは、ほかの端末にも削除を伝えるため、
+ * 中身が空の記録（{ text: "", updated }）として残します。
  */
 const NOTES = (() => {
   "use strict";
 
   const KEY = "theologian-notes";
   let cache = null;
+  const hooks = [];
 
   function load() {
     if (cache) return cache;
@@ -24,19 +29,23 @@ const NOTES = (() => {
     try { localStorage.setItem(KEY, JSON.stringify(cache)); return true; } catch (e) { return false; }
   }
   const changed = () => document.dispatchEvent(new CustomEvent("notes-changed"));
+  const live = (n) => !!(n && typeof n.text === "string" && n.text.trim());
+  const notify = (id, rec) => hooks.forEach((fn) => { try { fn(id, rec); } catch (e) { /* 同期の失敗で保存を止めない */ } });
 
   return {
-    get: (id) => (load()[id] ? load()[id].text : ""),
-    updated: (id) => (load()[id] ? load()[id].updated : 0),
-    has: (id) => !!(load()[id] && load()[id].text.trim()),
-    all: () => Object.entries(load()).filter(([, n]) => n.text.trim()).map(([id, n]) => ({ id, ...n })),
-    count: () => Object.values(load()).filter((n) => n.text.trim()).length,
+    get: (id) => (live(load()[id]) ? load()[id].text : ""),
+    updated: (id) => (live(load()[id]) ? load()[id].updated : 0),
+    has: (id) => live(load()[id]),
+    all: () => Object.entries(load()).filter(([, n]) => live(n)).map(([id, n]) => ({ id, ...n })),
+    count: () => Object.values(load()).filter(live).length,
     set(id, text) {
       load();
-      if (text.trim()) cache[id] = { text, updated: Date.now() };
-      else delete cache[id];
+      if (!text.trim() && !cache[id]) return true; // もともと無いメモを消す必要はない
+      const rec = { text: text.trim() ? text : "", updated: Date.now() };
+      cache[id] = rec;
       const ok = persist();
       changed();
+      notify(id, rec);
       return ok;
     },
     // バックアップの読み込み：同じ人物のメモは、新しい方を残す
@@ -46,13 +55,34 @@ const NOTES = (() => {
       Object.entries(data || {}).forEach(([id, v]) => {
         if (!v || typeof v.text !== "string" || !v.text.trim()) return;
         const updated = Number(v.updated) || Date.now();
-        if (!cache[id] || cache[id].updated < updated) { cache[id] = { text: v.text, updated }; n += 1; }
+        if (!cache[id] || cache[id].updated < updated) {
+          cache[id] = { text: v.text, updated };
+          n += 1;
+          notify(id, cache[id]);
+        }
       });
       persist();
       changed();
       return n;
     },
-    raw: () => ({ ...load() })
+    // ほかの端末で書かれたメモを取り込む（新しいものだけ）。取り込んだ件数を返す
+    applyRemote(list) {
+      load();
+      let n = 0;
+      list.forEach(([id, v]) => {
+        if (!v || typeof v.text !== "string") return;
+        const updated = Number(v.updated) || 0;
+        if (!cache[id] || cache[id].updated < updated) { cache[id] = { text: v.text, updated }; n += 1; }
+      });
+      if (n) { persist(); changed(); }
+      return n;
+    },
+    // 削除の記録も含めたすべて（同期用）
+    entries: () => ({ ...load() }),
+    onLocalChange: (fn) => hooks.push(fn),
+    // この端末のメモをすべて消す（共用の端末でログアウトするときなど。クラウドには影響しない）
+    clearLocal() { cache = {}; persist(); changed(); },
+    raw: () => Object.fromEntries(Object.entries(load()).filter(([, n]) => live(n)))
   };
 })();
 
