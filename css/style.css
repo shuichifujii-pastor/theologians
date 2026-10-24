@@ -542,3 +542,5 @@ body.has-tts { padding-bottom: 76px; }
 @media print { .tts-bar { display: none; } }
 .tts-bar, .tts-bar button { white-space: nowrap; }
 body.has-tts dialog .detail { padding-bottom: 84px; }
+.tts-anchor { box-shadow: -4px 0 0 #c9963f; background-color: #fff6e0 !important; border-radius: 4px; }
+body.has-tts .view p, body.has-tts .view li, body.has-tts .view dd, body.has-tts dialog p, body.has-tts dialog li { cursor: text; }
