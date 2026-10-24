@@ -5,6 +5,9 @@
  * ブラウザの音声合成（Web Speech API）を使います。
  * 画面に見えている位置から下へ順に読み、読んでいる箇所に色を付けます。
  * 人物の詳細画面が開いているときは、その内容を読みます。
+ * 文章をタップ（クリック）すると、そこから読み上げます。
+ *   ・読み上げ中／一時停止中：タップした段落へすぐに移って読む
+ *   ・止まっているとき：タップした段落に印を付け、▶ を押すとそこから読む
  */
 (() => {
   "use strict";
@@ -29,6 +32,7 @@
   let state = "idle";    // idle / playing / paused
   let current = null;    // いま読んでいる要素
   let token = 0;         // 停止後に古い発話の続きが動かないようにする
+  let anchor = null;     // タップして選んだ読み始めの段落
 
   // ---------- バー ----------
   const bar = document.createElement("div");
@@ -51,6 +55,7 @@
     stopBtn.hidden = s === "idle";
     const [icon, label, aria] = s === "playing" ? ["❚❚", "一時停止", "読み上げを一時停止"]
       : s === "paused" ? ["▶", "続きを読む", "読み上げを再開"]
+      : anchor ? ["▶", "ここから読む", "選んだ段落から読み上げる"]
       : ["▶", "読み上げ", "画面を読み上げる"];
     bar.querySelector(".tts-icon").textContent = icon;
     bar.querySelector(".tts-label").textContent = label;
@@ -145,9 +150,26 @@
     synth.speak(u);
   }
 
+  // 選んだ段落（またはそれを含むまとまり）の位置
+  const indexOfBlock = (list, el) => list.findIndex((x) => x.el === el || x.el.contains(el) || el.contains(x.el));
+
+  function setAnchor(el) {
+    if (anchor) anchor.classList.remove("tts-anchor");
+    anchor = el;
+    if (el) el.classList.add("tts-anchor");
+    if (state === "idle") setState("idle");
+  }
+
   function start() {
-    queue = collect(targetRoot(), true);
+    const root = targetRoot();
     qi = 0; ci = 0;
+    if (anchor && anchor.isConnected && root.contains(anchor)) {
+      queue = collect(root, false);
+      qi = Math.max(0, indexOfBlock(queue, anchor));
+    } else {
+      queue = collect(root, true);
+    }
+    setAnchor(null);
     if (!queue.length) return;
     token += 1;
     synth.cancel();
@@ -171,8 +193,31 @@
     synth.cancel();
     setState("idle");
     mark(null);
+    setAnchor(null);
     queue = []; qi = 0; ci = 0;
   }
+
+  // ---------- タップした所から読む ----------
+  document.addEventListener("click", (e) => {
+    // ボタン・リンク・入力欄などは、本来の働き（詳細を開くなど）を優先する
+    if (e.target.closest("button, a, input, select, textarea, label, summary, .tts-bar")) return;
+    // 文字を選択（なぞってコピー）しているときは反応しない
+    const sel = window.getSelection && window.getSelection();
+    if (sel && !sel.isCollapsed && String(sel).trim()) return;
+    const root = targetRoot();
+    const el = e.target.closest(BLOCKS);
+    if (!el || !root.contains(el) || el.closest(SKIP)) return;
+    if (state === "idle") {
+      setAnchor(anchor === el ? null : el); // 同じ所をもう一度タップすると解除
+      return;
+    }
+    // 読み上げ中・一時停止中は、その段落へ移って読む
+    let i = indexOfBlock(queue, el);
+    if (i < 0) { queue = collect(root, false); i = indexOfBlock(queue, el); }
+    if (i < 0) return;
+    qi = i; ci = 0;
+    resume();
+  });
 
   mainBtn.addEventListener("click", () => {
     if (state === "playing") pause();
@@ -191,13 +236,16 @@
   if (dialog) {
     new MutationObserver(() => {
       if (state !== "idle") stop();
+      if (anchor && !targetRoot().contains(anchor)) setAnchor(null);
       (dialog.open ? dialog : document.body).appendChild(bar);
     }).observe(dialog, { attributes: true, attributeFilter: ["open"] });
     if (dialog.open) dialog.appendChild(bar); // URL（#人物）から直接開いた場合
   }
   // 画面（タブや詳解ページなど）を切り替えたら止める
   document.addEventListener("click", (e) => {
-    if (state !== "idle" && e.target.closest(".tab, [data-essay], [data-essay-back], [data-debate], [data-inst], [data-stream]")) stop();
+    if (e.target.closest(".tab, [data-essay], [data-essay-back], [data-debate], [data-inst], [data-stream]")) {
+      if (state !== "idle") stop(); else setAnchor(null);
+    }
   });
   // ページを離れるときは止める
   window.addEventListener("pagehide", () => synth.cancel());
