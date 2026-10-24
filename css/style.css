@@ -609,3 +609,5 @@ body.has-tts .view p, body.has-tts .view li, body.has-tts .view dd, body.has-tts
 .sy-btn:disabled { opacity: .6; cursor: default; }
 .sy-msg { flex-basis: 100%; font-size: .8rem; color: var(--ng); }
 body.sync-on .d-note h3::after { content: "　☁ Googleアカウントで同期中"; font-size: .72rem; font-weight: 400; color: #5a8f3a; letter-spacing: 0; }
+.sy-hint { flex-basis: 100%; font-size: .8rem; color: var(--muted); line-height: 1.6; }
+.sy-hint a { color: var(--accent); font-weight: 700; }
