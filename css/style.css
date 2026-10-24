@@ -592,3 +592,20 @@ body.has-tts .view p, body.has-tts .view li, body.has-tts .view dd, body.has-tts
 .nt-del:hover { border-color: var(--ng); color: var(--ng); }
 .nt-empty { background: var(--chip); border-radius: 12px; padding: 16px 18px; color: var(--muted); }
 .nt-empty p { margin: 0 0 6px; }
+
+/* メモの同期 */
+.nt-sync {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 12px; padding: 10px 14px;
+  background: #f3f6ee; border: 1px solid #c9d6b4; border-radius: 12px; font-size: .88rem;
+}
+.sy-text { flex: 1 1 260px; color: var(--ink); }
+.sy-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #5a8f3a; margin-right: 6px; vertical-align: 1px; box-shadow: 0 0 0 3px rgba(90, 143, 58, .2); }
+.sy-btn {
+  font: inherit; font-size: .85rem; cursor: pointer; border-radius: 999px; padding: 6px 14px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.sy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.sy-login { background: #fff; border-color: #c9b190; font-weight: 700; }
+.sy-btn:disabled { opacity: .6; cursor: default; }
+.sy-msg { flex-basis: 100%; font-size: .8rem; color: var(--ng); }
+body.sync-on .d-note h3::after { content: "　☁ Googleアカウントで同期中"; font-size: .72rem; font-weight: 400; color: #5a8f3a; letter-spacing: 0; }
