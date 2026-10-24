@@ -125,8 +125,9 @@
     <section id="view-notes" class="view" hidden>
       <div class="inst-intro">
         <h2>わたしのメモ</h2>
-        <p>人物の詳細画面の「メモ」欄に書いた内容の一覧です。ここでも直接書き換えられます（自動で保存）。メモはこの端末のブラウザだけに保存されるので、大切なメモはときどき「バックアップを保存」してください。</p>
+        <p>人物の詳細画面の「メモ」欄に書いた内容の一覧です。ここでも直接書き換えられます（自動で保存）。Googleアカウントでログインすると、どの端末からでも同じメモを使えます。ログインしないときは、この端末のブラウザだけに保存されます。</p>
       </div>
+      <div class="nt-sync" id="notes-sync" hidden></div>
       <div class="nt-bar">
         <div class="search-box nt-search"><input id="notes-q" type="search" placeholder="メモの中身や人物名で検索" autocomplete="off"></div>
         <label class="nt-sort">並び順
@@ -229,5 +230,7 @@
   <script src="js/app.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/tts.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/sync.js"></script>
 </body>
 </html>
