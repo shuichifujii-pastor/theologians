@@ -45,7 +45,8 @@
       html = `
         <span class="sy-text">☁ Googleアカウントでログインすると、同じアカウントのどの端末（スマホ・パソコン）からでも、同じメモを読み書きできます。</span>
         <button class="sy-btn sy-login" id="sync-login" ${phase === "signing" ? "disabled" : ""}>${phase === "signing" ? "ログイン中…" : "Googleでログインして同期"}</button>
-        ${message ? `<span class="sy-msg">${escapeHtml(message)}</span>` : ""}`;
+        ${message ? `<span class="sy-msg">${escapeHtml(message)}</span>` : ""}
+        ${isAppWindow() ? `<span class="sy-hint">パソコンの「アプリ」の窓ではログインできないことがあります。そのときは <a href="./#notes" target="_blank" rel="noopener">Chromeの通常のタブで開いて</a> ログインしてください。ログインした状態は、このアプリの窓にも引き継がれます（引き継がれないときは、アプリを開き直してください）。</span>` : ""}`;
     } else {
       const who = user ? (user.email || user.displayName || "") : "";
       html = `
@@ -56,6 +57,10 @@
     box.innerHTML = html;
   }
   const set = (p, msg = "") => { phase = p; message = msg; render(); };
+  // ホーム画面・デスクトップに追加した「アプリ」として、独立した窓で開いているか
+  const isAppWindow = () =>
+    ["standalone", "window-controls-overlay", "minimal-ui", "fullscreen"].some((m) => window.matchMedia && window.matchMedia(`(display-mode: ${m})`).matches)
+    || window.navigator.standalone === true;
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -135,13 +140,16 @@
       try {
         await auth.signInWithPopup(provider);
       } catch (err) {
+        // ログインは別の小さな窓（ポップアップ）で行う。
+        // ページごと移動する方式（リダイレクト）は、このサイトとログイン用のアドレスが異なるため、
+        // 最近の Chrome ではうまく動かないことがあるので使わない。
         const code = err && err.code ? err.code : "";
-        if (code === "auth/popup-blocked" || code === "auth/operation-not-supported-in-this-environment") {
-          try { await auth.signInWithRedirect(provider); return; } catch (e2) { /* 下で表示 */ }
-        }
+        const tail = isAppWindow() ? "下の案内のとおり、Chromeの通常のタブで開いてログインしてください。" : "もう一度お試しください。";
         const msg = code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request" ? ""
           : code === "auth/unauthorized-domain" ? "このサイトのアドレスが Firebase に登録されていません（設定を確認してください）。"
-          : "ログインできませんでした。もう一度お試しください。";
+          : code === "auth/popup-blocked" ? `ログイン用の小さな窓（ポップアップ）がブロックされました。アドレスバーの右端のアイコンから、このサイトのポップアップを許可してください。${isAppWindow() ? tail : ""}`
+          : code === "auth/network-request-failed" ? "通信できませんでした。インターネットの接続を確認してください。"
+          : `ログインできませんでした（${code || "原因不明"}）。${tail}`;
         set("out", msg);
       }
     } else if (e.target.closest("#sync-logout") && auth) {
