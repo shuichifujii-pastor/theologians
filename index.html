@@ -33,6 +33,7 @@
       <button class="tab" role="tab" data-view="debates" aria-selected="false">論争・会議</button>
       <button class="tab" role="tab" data-view="streams" aria-selected="false">現代神学略解</button>
       <button class="tab" role="tab" data-view="institutions" aria-selected="false">神学教育機関</button>
+      <button class="tab" role="tab" data-view="notes" aria-selected="false">メモ<span class="tab-n" id="notes-tab-n"></span></button>
       <button class="tab" role="tab" data-view="quiz" aria-selected="false">クイズ</button>
     </nav>
 
@@ -120,6 +121,34 @@
       <article id="essay"></article>
     </section>
 
+    <!-- メモ -->
+    <section id="view-notes" class="view" hidden>
+      <div class="inst-intro">
+        <h2>わたしのメモ</h2>
+        <p>人物の詳細画面の「メモ」欄に書いた内容の一覧です。ここでも直接書き換えられます（自動で保存）。メモはこの端末のブラウザだけに保存されるので、大切なメモはときどき「バックアップを保存」してください。</p>
+      </div>
+      <div class="nt-bar">
+        <div class="search-box nt-search"><input id="notes-q" type="search" placeholder="メモの中身や人物名で検索" autocomplete="off"></div>
+        <label class="nt-sort">並び順
+          <select id="notes-sort">
+            <option value="updated">更新が新しい順</option>
+            <option value="born">年代順</option>
+            <option value="name">名前順</option>
+          </select>
+        </label>
+      </div>
+      <div class="nt-tools">
+        <span id="notes-tools">
+          <button class="nt-tool" id="notes-export-txt">テキストで書き出す</button>
+          <button class="nt-tool" id="notes-backup">バックアップを保存</button>
+        </span>
+        <button class="nt-tool" id="notes-import">バックアップを読み込む</button>
+        <input type="file" id="notes-import-file" accept=".json,application/json" hidden>
+      </div>
+      <p class="count" id="notes-count"></p>
+      <div id="notes"></div>
+    </section>
+
     <!-- クイズ -->
     <section id="view-quiz" class="view" hidden>
       <div id="quiz"></div>
@@ -134,6 +163,11 @@
       <p class="d-original" id="d-original"></p>
       <p class="d-summary" id="d-summary"></p>
       <p class="d-essay" id="d-essay-wrap" hidden><button class="essay-link" id="d-essay-btn" data-essay="">この人の神学・思想をくわしく読む（詳解ページ）→</button></p>
+      <div class="d-note">
+        <h3><label for="d-note">メモ</label></h3>
+        <textarea id="d-note" placeholder="この人物について、気づいたこと・説教や授業で使いたいこと・読みたい本などを自由にメモできます" rows="3"></textarea>
+        <p class="d-note-status" id="d-note-status"></p>
+      </div>
       <div id="d-more" hidden>
         <h3>生涯</h3>
         <p class="d-text" id="d-life"></p>
@@ -191,6 +225,7 @@
   <script src="js/institutions.js"></script>
   <script src="js/debates.js"></script>
   <script src="js/essays.js"></script>
+  <script src="js/notes.js"></script>
   <script src="js/app.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/tts.js"></script>
